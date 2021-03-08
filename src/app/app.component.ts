@@ -20,7 +20,7 @@ export class AppComponent {
     // Sometimes is a special type that lets you specify the chance a value will be undefined
     public readonly code = `
 // Mimic lets you generate mock data using TypeScript
-// On the right is sample output for what's define below (try and edit it)
+// On the right is sample output for what's defined below (try and edit it)
 
 interface Name {
     firstName: asFirstName; // Use built in mock data generators. These start with "as", see auto complete for more

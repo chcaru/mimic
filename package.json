@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "ng build --prod && firebase deploy --only hosting"
   },
   "private": true,
   "dependencies": {
@@ -27,6 +28,7 @@
     "@types/seedrandom": "^2.4.28",
     "@types/string-similarity": "^4.0.0",
     "faker": "^5.4.0",
+    "firebase-tools": "^9.5.0",
     "monaco-editor": "^0.22.3",
     "ng-zorro-antd": "^11.2.0",
     "rxjs": "~6.6.0",
