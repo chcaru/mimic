@@ -1,1 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
+.flex {
+    display: flex;
+
+    &.h-center:not(.column) {
+        justify-content: center;
+    }
+
+    &.h-space-between:not(.column) {
+        justify-content: space-between;
+    }
+
+    &.h-space-around:not(.column) {
+        justify-content: space-around;
+    }
+
+    &.h-start:not(.column) {
+        justify-content: flex-start;
+    }
+
+    &.h-end:not(.column) {
+        justify-content: flex-end;
+    }
+
+    &.v-center:not(.column) {
+        align-items: center;
+    }
+
+    &.v-start:not(.column) {
+        align-items: flex-start;
+    }
+
+    &.v-end:not(.column) {
+        align-items: flex-end;
+    }
+
+    &.row {
+        flex-direction: row;
+    }
+
+    &.column {
+        flex-direction: column;
+
+        &.h-center {
+            align-items: center;
+        }
+
+        &.h-space-between {
+            justify-content: space-between;
+        }
+
+        &.h-space-around {
+            justify-content: space-around;
+        }
+
+        &.h-start {
+            align-items: flex-start;
+        }
+
+        &.h-end {
+            align-items: flex-end;
+        }
+
+        &.v-center {
+            justify-content: center;
+        }
+
+        &.v-start {
+            justify-content: flex-start;
+        }
+
+        &.v-end {
+            justify-content: flex-end;
+        }
+    }
+}

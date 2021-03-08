@@ -15,7 +15,11 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+        "mimic/*": ["./src/mimic/*"],
+        "mimic": ["./src/mimic"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false
