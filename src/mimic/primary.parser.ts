@@ -219,6 +219,8 @@ const mimicPrimaryParsers = {
 const primaries = Object.keys(mimicPrimaryParsers).filter(key => key.startsWith('as'));
 const tryDetectPrimary = (name: string) => findBestMatch(name, primaries).bestMatch.target;
 const autoPrimary = (node: Node) => {
+    // TODO: walk up tree to find PropertySignature
+    // TODO: include name of interface / type for more context?
     const parent = node.parent as PropertySignature;
     if (parent.kind === SyntaxKind.PropertySignature) {
         const name = getPropertyName(parent.name);
