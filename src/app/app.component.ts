@@ -42,6 +42,8 @@ interface Name {
     public readonly output$ = new BehaviorSubject<string>('');
 
     public editorInit(_codeEditor: m.editor.IStandaloneCodeEditor): void {
+        console.log(_codeEditor);
+        console.log(MimicLib.lib);
         monaco.languages.typescript.typescriptDefaults.addExtraLib(MimicLib.lib);
         setTimeout(() => this.setOutput(this.code));
     }
