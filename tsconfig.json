@@ -17,11 +17,10 @@
       "dom"
     ],
     "paths": {
-        "mimic/*": ["./src/mimic/*"],
-        "mimic": ["./src/mimic"]
+        "mimic": [
+          "dist/mimic/mimic",
+          "dist/mimic"
+        ]
     }
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false
   }
 }

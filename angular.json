@@ -3,49 +3,88 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "eventhub": {
+    "mimic": {
+      "projectType": "library",
+      "root": "projects/mimic",
+      "sourceRoot": "projects/mimic/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/mimic/tsconfig.lib.json",
+            "project": "projects/mimic/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/mimic/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/mimic/src/test.ts",
+            "tsConfig": "projects/mimic/tsconfig.spec.json",
+            "karmaConfig": "projects/mimic/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/mimic/tsconfig.lib.json",
+              "projects/mimic/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "mimic-site": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/mimic-site",
+      "sourceRoot": "projects/mimic-site/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/eventhub",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/mimic-site",
+            "index": "projects/mimic-site/src/index.html",
+            "main": "projects/mimic-site/src/main.ts",
+            "polyfills": "projects/mimic-site/src/polyfills.ts",
+            "tsConfig": "projects/mimic-site/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/android-chrome-192x192.png",
-              "src/android-chrome-512x512.png",
-              "src/apple-touch-icon.png",
-              "src/favicon-16x16.png",
-              "src/favicon-32x32.png",
-              "src/site.webmanifest",
-              "src/assets",
+              "projects/mimic-site/src/favicon.ico",
+              "projects/mimic-site/src/android-chrome-192x192.png",
+              "projects/mimic-site/src/android-chrome-512x512.png",
+              "projects/mimic-site/src/apple-touch-icon.png",
+              "projects/mimic-site/src/favicon-16x16.png",
+              "projects/mimic-site/src/favicon-32x32.png",
+              "projects/mimic-site/src/site.webmanifest",
+              "projects/mimic-site/src/assets",
               {
                 "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "input": "node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/monaco-editor/min/vs",
+                "input": "node_modules/monaco-editor/min/vs",
                 "output": "/assets/vs/"
               }
             ],
             "styles": [
-              "src/theme.less",
-              "src/styles.scss"
+              "projects/mimic-site/src/styles.scss"
             ],
             "scripts": []
           },
@@ -53,8 +92,138 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/mimic-site/src/environments/environment.ts",
+                  "with": "projects/mimic-site/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "10mb",
+                  "maximumError": "20mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mimic-site:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mimic-site:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mimic-site:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/mimic-site/src/test.ts",
+            "polyfills": "projects/mimic-site/src/polyfills.ts",
+            "tsConfig": "projects/mimic-site/tsconfig.spec.json",
+            "karmaConfig": "projects/mimic-site/karma.conf.js",
+            "assets": [
+              "projects/mimic-site/src/favicon.ico",
+              "projects/mimic-site/src/assets"
+            ],
+            "styles": [
+              "projects/mimic-site/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/mimic-site/tsconfig.app.json",
+              "projects/mimic-site/tsconfig.spec.json",
+              "projects/mimic-site/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/mimic-site/e2e/protractor.conf.js",
+            "devServerTarget": "mimic-site:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mimic-site:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "eventhub": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/eventhub",
+      "sourceRoot": "projects/eventhub/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/eventhub",
+            "index": "projects/eventhub/src/index.html",
+            "main": "projects/eventhub/src/main.ts",
+            "polyfills": "projects/eventhub/src/polyfills.ts",
+            "tsConfig": "projects/eventhub/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+                "projects/eventhub/src/favicon.ico",
+                "projects/eventhub/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@ant-design/icons-angular/src/inline-svg/",
+                  "output": "/assets/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/monaco-editor/min/vs",
+                  "output": "/assets/vs/"
+                }
+            ],
+            "styles": [
+              "projects/eventhub/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/eventhub/src/environments/environment.ts",
+                  "with": "projects/eventhub/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -99,22 +268,16 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "projects/eventhub/src/test.ts",
+            "polyfills": "projects/eventhub/src/polyfills.ts",
+            "tsConfig": "projects/eventhub/tsconfig.spec.json",
+            "karmaConfig": "projects/eventhub/karma.conf.js",
             "assets": [
-              "src/favicon.ico",
-              "src/android-chrome-192x192.png",
-              "src/android-chrome-512x512.png",
-              "src/apple-touch-icon.png",
-              "src/favicon-16x16.png",
-              "src/favicon-32x32.png",
-              "src/site.webmanifest",
-              "src/assets"
+              "projects/eventhub/src/favicon.ico",
+              "projects/eventhub/src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "projects/eventhub/src/styles.scss"
             ],
             "scripts": []
           }
@@ -123,9 +286,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "projects/eventhub/tsconfig.app.json",
+              "projects/eventhub/tsconfig.spec.json",
+              "projects/eventhub/e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -135,7 +298,7 @@
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
+            "protractorConfig": "projects/eventhub/e2e/protractor.conf.js",
             "devServerTarget": "eventhub:serve"
           },
           "configurations": {

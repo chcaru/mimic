@@ -1,5 +1,5 @@
 {
-  "name": "eventhub",
+  "name": "chriscaruso",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "ng build --prod && firebase deploy --only hosting"
+    "deploy:mimic-site": "ng build mimic-site --prod && firebase deploy --only hosting:mimic-site",
+    "deploy:eventhub": "ng build eventhub --prod && firebase deploy --only hosting:eventhub"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +52,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "ng-packagr": "^11.0.0",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",

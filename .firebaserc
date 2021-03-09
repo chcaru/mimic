@@ -1,5 +1,14 @@
 {
-  "projects": {
-    "default": "mimic-9d4de"
+  "targets": {
+    "mimic-9d4de": {
+      "hosting": {
+        "mimic-site": [
+          "mimic-9d4de"
+        ],
+        "eventhub": [
+          "eventhub-af862"
+        ]
+      }
+    }
   }
 }

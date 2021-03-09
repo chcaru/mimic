@@ -1,0 +1,10 @@
+{
+  "name": "mimic",
+  "version": "0.0.1",
+  "dependencies": {
+    "faker": "^5.4.0",
+    "seedrandom": "^3.0.5",
+    "string-similarity": "^4.0.4",
+    "typescript": "~4.1.5"
+  }
+}
