@@ -22,6 +22,7 @@ import { AppEffects } from './store/effects';
 import { AppRoutingModule } from './app-routing.module';
 import { EventHubComponent } from './pages/event-hub/event-hub.component';
 import { IconsProviderModule } from './icons-provider.module';
+import { MimicDefinerComponent } from './components/mimic-definer/mimic-definer.component';
 import { NewEventHubComponent } from './pages/new-event-hub/new-event-hub.component';
 import { reducers, metaReducers } from './store';
 
@@ -31,6 +32,7 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         EventHubComponent,
+        MimicDefinerComponent,
         NewEventHubComponent,
     ],
     imports: [

@@ -1,0 +1,15 @@
+<nz-code-editor
+    [ngModel]="codeDefinition"
+    [nzEditorOption]="editorOptions"
+    [nzLoading]="editorLoading"
+    (nzEditorInitialized)="editorInit()"
+    (ngModelChange)="defintionChange($event)">
+</nz-code-editor>
+
+<nz-code-editor
+    *ngIf="showExample"
+    #outputEditor
+    [ngModel]="output$ | async"
+    [nzEditorOption]="editorOptions"
+    [nzLoading]="editorLoading">
+</nz-code-editor>

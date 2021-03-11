@@ -1,0 +1,15 @@
+
+:host {
+    display: flex;
+}
+
+nz-code-editor {
+    display: block;
+    margin-top: 8px;
+    height: 100%;
+    width: 100%;
+
+    &:first-child {
+        margin-right: 16px;
+    }
+}

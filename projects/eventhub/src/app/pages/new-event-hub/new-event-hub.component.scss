@@ -3,15 +3,8 @@ input {
     margin: 8px 0 16px;
 }
 
-nz-code-editor {
-    display: block;
-    margin-top: 8px;
+mimic-definer {
     height: calc(100vh - 371px);
-    width: calc(50vw - 150px);
-
-    &:first-child {
-        margin-right: 16px;
-    }
 }
 
 button {

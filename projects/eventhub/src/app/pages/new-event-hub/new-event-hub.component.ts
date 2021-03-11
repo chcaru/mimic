@@ -1,14 +1,9 @@
-import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import type { EditorOptions, NzCodeEditorComponent } from 'ng-zorro-antd/code-editor';
-import type * as m from 'monaco-editor';
-import { BehaviorSubject } from 'rxjs';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
-import { MimicLib, mimicDefinitions, mimicGenerators, MimicDefintion } from 'mimic';
+import { MimicDefintion } from 'mimic';
 
 import { StoreFacade } from '../../store/facade';
-import { Router } from '@angular/router';
-
-declare const monaco: typeof m;
 
 @Component({
     templateUrl: './new-event-hub.component.html',
@@ -16,9 +11,6 @@ declare const monaco: typeof m;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewEventHubComponent {
-
-    @ViewChild('outputEditor')
-    private readonly outputEditor: NzCodeEditorComponent;
 
     public readonly exampleMimic = `
 // Mimic lets you generate mock data using TypeScript
@@ -57,19 +49,8 @@ interface Team {
     // members: Person[]; // Arrays have a random range of 0 to 10 elements
 }
 `;
-
-    public readonly editorOptions: EditorOptions = {
-        language: 'typescript',
-        theme: 'vs-dark',
-        minimap: {
-            enabled: false,
-        },
-    };
-
-    public readonly output$ = new BehaviorSubject<string>('');
-
-    public editorLoading = true;
-    public definitions: MimicDefintion[] = [];
+    public mimicDefinitions: MimicDefintion[] = [];
+    public codeDefinition: string;
 
     constructor(
         private readonly facade: StoreFacade,
@@ -83,33 +64,9 @@ interface Team {
                 id,
                 name,
                 connectionString,
-                mimicDefinitions: this.definitions,
+                mimicDefinitions: this.mimicDefinitions,
             });
             this.router.navigate(['event-hubs', id]);
         }
-    }
-
-    public editorInit(): void {
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(MimicLib.lib);
-        this.editorLoading = false;
-        setTimeout(() => this.setOutput(this.exampleMimic));
-    }
-
-    public defintionChange(defintion: string) {
-        this.setOutput(defintion);
-    }
-
-    public setOutput(definition: string) {
-        this.definitions = mimicDefinitions(definition);
-        const generators = mimicGenerators(this.definitions);
-        const outputs = [];
-        for (const genDef of generators.generatorDefs) {
-            const output = `\nconst ${genDef.name} = `
-                + JSON.stringify(genDef.generator(), null, 4) + ';';
-            outputs.push(output);
-        }
-        const output = outputs.join('\n\n');
-        this.output$.next(output);
-        this.outputEditor.writeValue(output);
     }
 }

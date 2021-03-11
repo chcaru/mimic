@@ -5,22 +5,11 @@
 <input #connectionString nz-input placeholder="Connection string" />
 
 <label>Setup some mock data</label>
-<div class="flex">
-    <nz-code-editor
-        [ngModel]="exampleMimic"
-        [nzEditorOption]="editorOptions"
-        [nzLoading]="editorLoading"
-        (nzEditorInitialized)="editorInit()"
-        (ngModelChange)="defintionChange($event)">
-    </nz-code-editor>
-
-    <nz-code-editor
-        #outputEditor
-        [ngModel]="output$ | async"
-        [nzEditorOption]="editorOptions"
-        [nzLoading]="editorLoading">
-    </nz-code-editor>
-</div>
+<mimic-definer
+    [codeDefinition]="exampleMimic"
+    (changeCodeDefinition)="codeDefinition = $event"
+    (changeDefinition)="mimicDefinitions = $event">
+</mimic-definer>
 
 <button
     nz-button
