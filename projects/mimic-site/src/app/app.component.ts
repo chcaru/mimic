@@ -32,7 +32,7 @@ interface Address {
     secondaryAddress?: asSecondaryAddress; // Properties can be optional. These have a 50% chance of being undefined
 }
 
-interface BitcointWallet {
+interface BitcoinWallet {
     type: 'bitcoin'; // Use type literals for static data
     bitcoinAddress: string; // Auto detect mock data
 }
@@ -45,7 +45,7 @@ interface EtheriumWallet {
 interface Person {
     name: Name; // Reference other defined types
     address: Address;
-    digitalWallet?: BitcointWallet | EtheriumWallet; // Union types for an equal chance at any of them
+    digitalWallet?: BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
     age: asNumberRange<20, 30>; // Some mock data generators can take parameters to customize them.
     image?: Sometimes<.75, asImagePeople>; // Sometimes is a special type that lets you specify the chance a value will be undefined
 }
@@ -76,7 +76,7 @@ interface Team {
         const generators = mimic(definition);
         const outputs = [];
         for (const genDef of generators.generatorDefs) {
-            const output = `const ${genDef.name} = `
+            const output = `\nconst ${genDef.name} = `
                 + JSON.stringify(genDef.generator(), null, 4) + ';';
             outputs.push(output);
         }

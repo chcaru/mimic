@@ -1,5 +1,6 @@
 {
   "name": "mimic",
+  "description": "Generate mock data easily using TypeScript types",
   "version": "0.0.1",
   "dependencies": {
     "faker": "^5.4.0",

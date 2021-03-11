@@ -1,13 +1,32 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>Eventhub</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <title>EventHub</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
-  <app-root></app-root>
+    <app-root></app-root>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBIZgbmANdF0yEwJmHg8lX1tRehcOHyvWc",
+            authDomain: "eventhub-af862.firebaseapp.com",
+            projectId: "eventhub-af862",
+            storageBucket: "eventhub-af862.appspot.com",
+            messagingSenderId: "37979215054",
+            appId: "1:37979215054:web:195a255f05de8fece82c9f",
+            measurementId: "G-5TZFHZTXD2"
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
 </body>
+
 </html>
