@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+
 import * as Actions from './actions';
 import * as Selectors from './selectors';
 
@@ -20,5 +21,9 @@ export class StoreFacade {
 
     public removeEventHub(id: string): void {
         this.store.dispatch(Actions.removeEventHub({ id }));
+    }
+
+    public updateEventHub(update: Actions.UpdateEventHub): void {
+        this.store.dispatch(Actions.updateEventHub(update));
     }
 }

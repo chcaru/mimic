@@ -17,6 +17,7 @@ export interface EventHub {
     id: string;
     name: string;
     connectionString: string;
+    codeDefinition: string;
     mimicDefinitions: MimicDefintion[];
 }
 

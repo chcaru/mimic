@@ -65,6 +65,7 @@ interface Team {
                 name,
                 connectionString,
                 mimicDefinitions: this.mimicDefinitions,
+                codeDefinition: this.codeDefinition,
             });
             this.router.navigate(['event-hubs', id]);
         }

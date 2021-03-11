@@ -1,1 +1,7 @@
-<mimic-definer></mimic-definer>
+<ng-container *ngIf="eventHub$ | async as eventHub">
+    <mimic-definer
+        [codeDefinition]="eventHub.codeDefinition"
+        (changeCodeDefinition)="updateCodeDefinition(eventHub.id, $event)"
+        (changeDefinitions)="updateDefinitions(eventHub.id, $event)">
+    </mimic-definer>
+</ng-container>

@@ -3,14 +3,11 @@ import {
     props,
 } from '@ngrx/store';
 import { MimicDefintion } from 'mimic';
+import { EventHub } from './state';
 
 const createName = (name: string) => `[EventHub] ${name}`;
 
-export interface NewEventHub {
-    id: string;
-    name: string;
-    connectionString: string;
-    mimicDefinitions: MimicDefintion[];
+export interface NewEventHub extends EventHub {
 }
 
 export const newEventHub = createAction(
@@ -25,4 +22,11 @@ export interface RemoveEventHub {
 export const removeEventHub = createAction(
     createName('Remove Event Hub'),
     props<RemoveEventHub>(),
+);
+
+export type UpdateEventHub = Partial<EventHub> & { id: string };
+
+export const updateEventHub = createAction(
+    createName('Update Event Hub'),
+    props<UpdateEventHub>(),
 );

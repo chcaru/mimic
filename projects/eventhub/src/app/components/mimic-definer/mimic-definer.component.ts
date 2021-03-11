@@ -26,7 +26,7 @@ export class MimicDefinerComponent {
     public changeCodeDefinition = new EventEmitter<string>();
 
     @Output()
-    public changeDefinition = new EventEmitter<MimicDefintion[]>();
+    public changeDefinitions = new EventEmitter<MimicDefintion[]>();
 
     @Output()
     public changeGenerators = new EventEmitter<Record<string, MimicGenerator>>();
@@ -64,7 +64,7 @@ export class MimicDefinerComponent {
         this.changeCodeDefinition.next(codeDefinition);
 
         this.definitions = mimicDefinitions(codeDefinition);
-        this.changeDefinition.next(this.definitions);
+        this.changeDefinitions.next(this.definitions);
 
         const generators = mimicGenerators(this.definitions);
         this.changeGenerators.next(generators.generatorMap);
