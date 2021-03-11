@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { StoreFacade } from './store/facade';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -7,4 +9,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+    public isCollapsed = false;
+
+    constructor(
+        public readonly facade: StoreFacade,
+    ) { }
 }

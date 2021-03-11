@@ -1,0 +1,30 @@
+<label>Give it a name</label>
+<input #name nz-input placeholder="Name" />
+
+<label>Event Hub connection string</label>
+<input #connectionString nz-input placeholder="Connection string" />
+
+<label>Setup some mock data</label>
+<div class="flex">
+    <nz-code-editor
+        [ngModel]="exampleMimic"
+        [nzEditorOption]="editorOptions"
+        [nzLoading]="editorLoading"
+        (nzEditorInitialized)="editorInit()"
+        (ngModelChange)="defintionChange($event)">
+    </nz-code-editor>
+
+    <nz-code-editor
+        #outputEditor
+        [ngModel]="output$ | async"
+        [nzEditorOption]="editorOptions"
+        [nzLoading]="editorLoading">
+    </nz-code-editor>
+</div>
+
+<button
+    nz-button
+    nzType="primary"
+    (click)="add(name.value, connectionString.value)">
+    Done
+</button>

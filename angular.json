@@ -214,6 +214,7 @@
                 }
             ],
             "styles": [
+              "projects/eventhub/src/theme.less",
               "projects/eventhub/src/styles.scss"
             ],
             "scripts": []
@@ -274,7 +275,17 @@
             "karmaConfig": "projects/eventhub/karma.conf.js",
             "assets": [
               "projects/eventhub/src/favicon.ico",
-              "projects/eventhub/src/assets"
+              "projects/eventhub/src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor/min/vs",
+                "output": "/assets/vs/"
+              }
             ],
             "styles": [
               "projects/eventhub/src/styles.scss"

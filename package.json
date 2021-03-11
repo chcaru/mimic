@@ -24,6 +24,7 @@
     "@azure/event-hubs": "^5.4.0",
     "@ngrx/effects": "^11.0.1",
     "@ngrx/entity": "^11.0.1",
+    "@ngrx/router-store": "^11.0.1",
     "@ngrx/store": "^11.0.1",
     "@types/faker": "^5.1.7",
     "@types/seedrandom": "^2.4.28",
@@ -32,11 +33,13 @@
     "firebase-tools": "^9.5.0",
     "monaco-editor": "^0.22.3",
     "ng-zorro-antd": "^11.2.0",
+    "ngrx-store-localstorage": "^11.0.0",
     "ngrx-store-logger": "^0.2.4",
     "rxjs": "~6.6.0",
     "seedrandom": "^3.0.5",
     "string-similarity": "^4.0.4",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.2",
     "zone.js": "~0.11.3"
   },
   "devDependencies": {

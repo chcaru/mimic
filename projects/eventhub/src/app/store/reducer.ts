@@ -5,13 +5,20 @@ import {
 } from '@ngrx/store';
 
 import * as Actions from './actions';
-import { initialState, State } from './state';
+import { initialState, EventHubState, eventHubEntity } from './state';
 
 const _reducer = createReducer(
     initialState,
-    // on(increment, state => state + 1),
+    on(Actions.newEventHub, (state, action) => ({
+        ...state,
+        eventHubs: eventHubEntity.addOne(action, state.eventHubs),
+    })),
+    on(Actions.removeEventHub, (state, action) => ({
+        ...state,
+        eventHubs: eventHubEntity.removeOne(action.id, state.eventHubs),
+    })),
 );
 
-export function reducer(state: State, action: Action): State {
+export function reducer(state: EventHubState, action: Action): EventHubState {
     return _reducer(state, action);
 }

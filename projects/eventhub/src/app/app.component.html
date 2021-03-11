@@ -1,0 +1,57 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+        [nzTrigger]="null">
+        <div class="sidebar-logo">
+            <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+                <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+            </span>
+        </div>
+        <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+            <li nz-submenu nzOpen nzTitle="Event Hubs" nzIcon="experiment">
+                <ul>
+                    <li
+                        *ngFor="let eventHub of facade.eventHubs$ | async"
+                        nz-menu-item
+                        nzMatchRouter>
+                        <a class="flex v-center" [routerLink]="'/event-hubs/' + eventHub.id">
+                            <i nz-icon nzType="database" nzTheme="outline"></i>
+                            {{eventHub.name}}
+                            <button
+                                class="delete-button"
+                                nz-button
+                                nzType="text"
+                                nz-popconfirm
+                                nzPopconfirmTitle="Remove this forever?"
+                                nzPopconfirmPlacement="right"
+                                [nzIcon]="popConfirmIcon"
+                                (nzOnConfirm)="facade.removeEventHub(eventHub.id)">
+                                <i nz-icon nzType="close" nzTheme="outline"></i>
+                            </button>
+                            <ng-template #popConfirmIcon>
+                                <i nz-icon nzType="warning" nzTheme="fill"></i>
+                            </ng-template>
+                        </a>
+                    </li>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/new">
+                            <i nz-icon nzType="plus" nzTheme="outline"></i>
+                            New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nz-sider>
+    <nz-layout>
+        <nz-header>
+            <div class="app-header" *ngIf="facade.activeEventHub$ | async as activeEventHub">
+                {{activeEventHub.name}}
+            </div>
+        </nz-header>
+        <nz-content>
+            <div class="inner-content">
+                <router-outlet></router-outlet>
+            </div>
+        </nz-content>
+    </nz-layout>
+</nz-layout>
