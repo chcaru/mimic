@@ -22,6 +22,14 @@ export class MimicDefinerComponent {
     @Input()
     public showExample: boolean = true;
 
+    @Input()
+    public set disabled(value: boolean) {
+        this.editorOptions = {
+            ...this.editorOptions,
+            readOnly: value,
+        };
+    }
+
     @Output()
     public changeCodeDefinition = new EventEmitter<string>();
 
@@ -34,7 +42,7 @@ export class MimicDefinerComponent {
     @ViewChild('outputEditor')
     private readonly outputEditor?: NzCodeEditorComponent;
 
-    public readonly editorOptions: EditorOptions = {
+    public editorOptions: EditorOptions = {
         language: 'typescript',
         theme: 'vs-dark',
         minimap: {

@@ -1,7 +1,79 @@
 <ng-container *ngIf="eventHub$ | async as eventHub">
+    <div class="flex top">
+        <div class="flex column controls">
+            <label>Send event interval (ms)</label>
+            <nz-slider
+                [nzMin]="100"
+                [nzMax]="10000"
+                [nzStep]="50"
+                [ngModel]="eventHub.sendInterval.value"
+                (nzOnAfterChange)="facade.updateEventHub({
+                    id: eventHub.id,
+                    sendInterval: {
+                        value: $event,
+                        randomness: eventHub.sendInterval.randomness
+                    }
+                })">
+            </nz-slider>
+
+            <label>Send event interval randomness (ms)</label>
+            <nz-slider
+                nzRange
+                [nzMin]="-eventHub.sendInterval.value"
+                [nzMax]="eventHub.sendInterval.value"
+                [nzStep]="10"
+                [ngModel]="eventHub.sendInterval.randomness"
+                (nzOnAfterChange)="facade.updateEventHub({
+                    id: eventHub.id,
+                    sendInterval: {
+                        value: eventHub.sendInterval.value,
+                        randomness: $event
+                    }
+                })">
+            </nz-slider>
+
+            <label>Mock data for event</label>
+            <nz-select
+                [ngModel]="eventHub.generatorName"
+                (ngModelChange)="facade.updateEventHub({
+                    id: eventHub.id,
+                    generatorName: $event
+                })">
+                <nz-option
+                    *ngFor="let mimicDefinitions of eventHub.mimicDefinitions"
+                    [nzValue]="mimicDefinitions.name"
+                    [nzLabel]="mimicDefinitions.name">
+                </nz-option>
+            </nz-select>
+
+            <ngx-charts-line-chart
+                [scheme]="scheme"
+                [xAxis]="true"
+                [timeline]="true"
+                [showGridLines]="false"
+                [animations]="false"
+                [results]="data$ | async">
+            </ngx-charts-line-chart>
+        </div>
+
+        <nz-code-editor
+            #outputEditor
+            *ngIf="output$ | async as output"
+            [ngModel]="output"
+            [nzEditorOption]="editorOptions">
+        </nz-code-editor>
+    </div>
+
     <mimic-definer
         [codeDefinition]="eventHub.codeDefinition"
-        (changeCodeDefinition)="updateCodeDefinition(eventHub.id, $event)"
-        (changeDefinitions)="updateDefinitions(eventHub.id, $event)">
+        (changeCodeDefinition)="updateEventHub$.next({
+            id: eventHub.id,
+            codeDefinition: $event
+        })"
+        (changeDefinitions)="facade.updateEventHub({
+            id: eventHub.id,
+            mimicDefinitions: $event
+        })">
     </mimic-definer>
+
 </ng-container>

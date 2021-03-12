@@ -24,6 +24,15 @@ const _reducer = createReducer(
             id: action.id,
         }, state.eventHubs),
     })),
+    on(Actions.toggleEventHub, (state, action) => ({
+        ...state,
+        eventHubs: eventHubEntity.updateOne({
+            changes: {
+                running: !state.eventHubs.entities[action.id].running,
+            },
+            id: action.id,
+        }, state.eventHubs),
+    })),
 );
 
 export function reducer(state: EventHubState, action: Action): EventHubState {

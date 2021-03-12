@@ -8,8 +8,16 @@ nz-code-editor {
     margin-top: 8px;
     height: 100%;
     width: 100%;
+    position: relative;
 
     &:first-child {
         margin-right: 16px;
     }
+}
+
+[nzType="lock"] {
+    position: absolute;
+    z-index: 999;
+    right: 50%;
+    top: 50%;
 }

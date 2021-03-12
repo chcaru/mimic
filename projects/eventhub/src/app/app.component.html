@@ -14,10 +14,26 @@
                         nz-menu-item
                         nzMatchRouter>
                         <a class="flex v-center" [routerLink]="'/event-hubs/' + eventHub.id">
-                            <i nz-icon nzType="database" nzTheme="outline"></i>
-                            {{eventHub.name}}
+                            <div class="event-hub-name">
+                                <i *ngIf="eventHub.running; else notRunning" nz-icon nzType="sync" [nzSpin]="true"></i>
+                                <ng-template #notRunning>
+                                    <i nz-icon nzType="database" nzTheme="outline"></i>
+                                </ng-template>
+                                {{eventHub.name}}
+                            </div>
+
                             <button
-                                class="delete-button"
+                                class="hover-button"
+                                nz-button
+                                nzType="text"
+                                (click)="$event.preventDefault(); facade.toggleEventHub(eventHub.id)">
+                                <i *ngIf="eventHub.running; else pause" nz-icon nzType="pause-circle" nzTheme="outline"></i>
+                                <ng-template #pause>
+                                    <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+                                </ng-template>
+                            </button>
+                            <button
+                                class="hover-button"
                                 nz-button
                                 nzType="text"
                                 nz-popconfirm

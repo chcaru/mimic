@@ -72,15 +72,18 @@ nz-content {
     height: 100%;
 }
 
+.event-hub-name {
+    margin-right: auto;
+}
+
 a:hover {
-    .delete-button {
+    .hover-button {
         display: block;
     }
 }
 
-.delete-button {
+.hover-button {
     display: none;
-    margin-left: auto;
 }
 
 i[nz-icon] {

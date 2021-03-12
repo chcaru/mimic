@@ -10,7 +10,7 @@ import {
     MimicProperty,
 } from './contracts';
 import { getPropertyName } from './helper.parsers';
-import { parsePrimary } from './primary.parser';
+import { autoPrimary, parsePrimary } from './primary.parser';
 
 const parseInterfaceDeclaration = (interfaceDeclaration: InterfaceDeclaration): MimicDefintion => {
     const name = getPropertyName(interfaceDeclaration.name);
@@ -23,7 +23,9 @@ const parseInterfaceDeclaration = (interfaceDeclaration: InterfaceDeclaration): 
 
 const parsePropertySignature = (propertySignature: PropertySignature): MimicProperty => {
     const name = getPropertyName(propertySignature.name);
-    const properties = parsePrimary(propertySignature.type);
+    const properties = propertySignature.type
+        ? parsePrimary(propertySignature.type)
+        : autoPrimary(propertySignature);
     return {
         ...properties,
         name,

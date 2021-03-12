@@ -8,3 +8,38 @@ mimic-definer {
     margin-top: auto;
     height: 50vh;
 }
+
+label {
+    margin-bottom: 8px;
+}
+
+nz-slider, nz-select {
+    margin-bottom: 16px;
+}
+
+nz-select {
+    width: 200px;
+}
+
+.top {
+    height: 100%;
+    max-height: calc(50vh - 175px);
+}
+
+.controls, nz-code-editor {
+    width: calc(50% - 8px);
+    height: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+nz-code-editor {
+    margin-left: 14px;
+}
+
+ngx-charts-line-chart {
+    padding: 40px 100px 40px 0;
+    width: 100%;
+    height: 60%;
+    max-width: 43vw;
+}

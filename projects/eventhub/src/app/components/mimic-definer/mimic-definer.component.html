@@ -1,6 +1,7 @@
 <nz-code-editor
     [ngModel]="codeDefinition"
     [nzEditorOption]="editorOptions"
+    [nzToolkit]="readonly"
     [nzLoading]="editorLoading"
     (nzEditorInitialized)="editorInit()"
     (ngModelChange)="defintionChange($event)">
@@ -11,5 +12,10 @@
     #outputEditor
     [ngModel]="output$ | async"
     [nzEditorOption]="editorOptions"
+    [nzToolkit]="readonly"
     [nzLoading]="editorLoading">
 </nz-code-editor>
+
+<ng-template #readonly>
+    <i *ngIf="editorOptions.readOnly" nz-icon nzType="lock" nzTheme="fill"></i>
+</ng-template>

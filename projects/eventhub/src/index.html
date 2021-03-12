@@ -26,6 +26,12 @@
         };
         firebase.initializeApp(firebaseConfig);
         firebase.analytics();
+        function Buffer() {}
+        Buffer.prototype.length = 16;
+        Buffer.prototype.slice = function() { return { toString: function() { return ''; } }; };
+        Buffer.byteLength = function () { return 0 };
+        Buffer.isBuffer = function () { return false };
+        var process = undefined;
     </script>
 </body>
 

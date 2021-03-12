@@ -30,3 +30,12 @@ export const updateEventHub = createAction(
     createName('Update Event Hub'),
     props<UpdateEventHub>(),
 );
+
+export interface ToggleEventHub {
+    id: string;
+}
+
+export const toggleEventHub = createAction(
+    createName('Toggle Event Hub'),
+    props<ToggleEventHub>(),
+);

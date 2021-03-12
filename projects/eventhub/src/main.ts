@@ -1,3 +1,11 @@
+import { Buffer } from 'buffer';
+const w = (window as any);
+w.Buffer = Buffer;
+w.process = {
+    env: {},
+    nextTick: x => x(),
+};
+
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

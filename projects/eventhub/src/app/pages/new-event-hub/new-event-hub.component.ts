@@ -13,27 +13,26 @@ import { StoreFacade } from '../../store/facade';
 export class NewEventHubComponent {
 
     public readonly exampleMimic = `
-// Mimic lets you generate mock data using TypeScript
-// On the right is sample output for what's defined below (try and edit it)
+// Generate mock data using TypeScript
 
 interface Name {
-    firstName: asFirstName; // Use built in mock data generators. These start with "as", see auto complete for more
-    lastName: asLastName;
+    firstName; // Auto detect mock data
+    lastName;
 }
 
 interface Address {
-    address: asStreetAddress;
+    address: asStreetAddress; // Use built in mock data generators. These start with "as", see auto complete for more
     secondaryAddress?: asSecondaryAddress; // Properties can be optional. These have a 50% chance of being undefined
 }
 
 interface BitcoinWallet {
     type: 'bitcoin'; // Use type literals for static data
-    bitcoinAddress: string; // Auto detect mock data
+    bitcoinAddress;
 }
 
 interface EtheriumWallet {
     type: 'etherium';
-    etheriumAddress: string;
+    etheriumAddress;
 }
 
 interface Person {
@@ -66,6 +65,12 @@ interface Team {
                 connectionString,
                 mimicDefinitions: this.mimicDefinitions,
                 codeDefinition: this.codeDefinition,
+                generatorName: undefined,
+                running: false,
+                sendInterval: {
+                    value: 1000,
+                    randomness: [-100, 100],
+                },
             });
             this.router.navigate(['event-hubs', id]);
         }

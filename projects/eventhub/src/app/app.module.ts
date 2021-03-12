@@ -12,10 +12,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { registerLocaleData } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import en from '@angular/common/locales/en';
+import { LineChartModule } from '@swimlane/ngx-charts';
 
 import { AppComponent } from './app.component';
 import { AppEffects } from './store/effects';
@@ -52,6 +55,9 @@ registerLocaleData(en);
         NzLayoutModule,
         NzMenuModule,
         NzPopconfirmModule,
+        NzSelectModule,
+        NzSliderModule,
+        LineChartModule,
         StoreRouterConnectingModule.forRoot(),
     ],
     providers: [{ provide: NZ_I18N, useValue: en_US }],

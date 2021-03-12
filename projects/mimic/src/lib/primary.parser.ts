@@ -18,6 +18,7 @@ import {
     MimicPropertyPrimary,
 } from './contracts';
 import {
+    findNearestParentOfKind,
     getLiteralNumber,
     getLiteralString,
     getPropertyName,
@@ -218,12 +219,11 @@ const mimicPrimaryParsers = {
 
 const primaries = Object.keys(mimicPrimaryParsers).filter(key => key.startsWith('as'));
 const tryDetectPrimary = (name: string) => findBestMatch(name, primaries).bestMatch.target;
-const autoPrimary = (node: Node) => {
-    // TODO: walk up tree to find PropertySignature
+export const autoPrimary = (node: Node) => {
     // TODO: include name of interface / type for more context?
-    const parent = node.parent as PropertySignature;
-    if (parent.kind === SyntaxKind.PropertySignature) {
-        const name = getPropertyName(parent.name);
+    const propertySignature = findNearestParentOfKind(node, SyntaxKind.PropertySignature) as PropertySignature;
+    if (propertySignature) {
+        const name = getPropertyName(propertySignature.name);
         const detectedPrimary = tryDetectPrimary(name);
         const parser = mimicPrimaryParsers[detectedPrimary];
         return parser(node);
