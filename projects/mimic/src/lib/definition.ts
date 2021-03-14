@@ -3,14 +3,17 @@ import {
     CompilerOptions,
     createProgram,
     createSourceFile,
+    InterfaceDeclaration,
     ScriptTarget,
     SourceFile,
     SyntaxKind,
+    TypeAliasDeclaration,
 } from 'typescript';
 
-import { MimicDefintion } from './contracts';
+import { getPropertyName } from './helper.parsers';
 import { lib } from './lib';
 import { parseNode } from './node.parser';
+import { isBuiltInType } from './primary.parser';
 
 const definitionFileName = 'defintion.ts';
 
@@ -35,6 +38,11 @@ class MimicCompilerHost implements CompilerHost {
     }
 }
 
+const topLevelDefinition = new Set([
+    SyntaxKind.InterfaceDeclaration,
+    SyntaxKind.TypeAliasDeclaration,
+]);
+
 export const getDefinitions = (tsCodeDefinition: string) => {
     const config: CompilerOptions = {
         noResolve: true,
@@ -46,6 +54,13 @@ export const getDefinitions = (tsCodeDefinition: string) => {
     return ast
         .getChildAt(0)
         .getChildren()
-        .filter(child => child.kind === SyntaxKind.InterfaceDeclaration)
-        .map(node => parseNode(node) as MimicDefintion);
+        .filter(node =>
+            topLevelDefinition.has(node.kind)
+            && !isBuiltInType(
+                getPropertyName(
+                    (node as InterfaceDeclaration | TypeAliasDeclaration).name,
+                ),
+            ),
+        )
+        .map(node => parseNode(node));
 };

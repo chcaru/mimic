@@ -3,7 +3,7 @@ import { States } from './lib';
 
 export type MimicGenerator = () => any;
 
-export const enum MimicPropertyKind {
+export const enum MimicTypeKind {
     DefinitionReference,
     Primary,
     Array,
@@ -12,25 +12,24 @@ export const enum MimicPropertyKind {
 }
 
 export interface MimicPropertyBase {
-    name: string;
-    kind: MimicPropertyKind;
+    kind: MimicTypeKind;
     optional?: boolean;
     sometimes?: number;
 }
 
 export interface MimicPropertyDefintionReference extends MimicPropertyBase {
-    kind: MimicPropertyKind.DefinitionReference;
+    kind: MimicTypeKind.DefinitionReference;
     definition: string;
 }
 
 export interface MimicPropertyLiteral extends MimicPropertyBase {
-    kind: MimicPropertyKind.Literal;
+    kind: MimicTypeKind.Literal;
     value: string | number | boolean;
 }
 
 export interface MimicPropertyUnion extends MimicPropertyBase {
-    kind: MimicPropertyKind.Union;
-    types: AnonymousMimicProperty[];
+    kind: MimicTypeKind.Union;
+    types: MimicType[];
 }
 
 export type MimicPrimaryArgs<T extends MimicPrimary> =
@@ -46,31 +45,49 @@ export type MimicPrimaryArgs<T extends MimicPrimary> =
     : any[];
 
 export interface MimicPropertyPrimary<T extends MimicPrimary = MimicPrimary> extends MimicPropertyBase {
-    kind: MimicPropertyKind.Primary;
+    kind: MimicTypeKind.Primary;
     primary: T;
     args?: MimicPrimaryArgs<T>;
 }
 
 export interface MimicPropertyArray extends MimicPropertyBase {
-    kind: MimicPropertyKind.Array;
-    element: AnonymousMimicProperty;
+    kind: MimicTypeKind.Array;
+    element: MimicType;
     min: number;
     max: number;
 }
 
-export type MimicProperty =
+export type MimicType =
     MimicPropertyDefintionReference
     | MimicPropertyPrimary
     | MimicPropertyArray
     | MimicPropertyLiteral
     | MimicPropertyUnion;
 
-export type AnonymousMimicProperty = Omit<MimicProperty, 'name'>;
-
-export interface MimicDefintion {
+export interface MimicProperty {
     name: string;
-    members: MimicProperty[];
+    type: MimicType;
 }
+
+export const enum MimicDefinitionKind {
+    Interface,
+    Type,
+}
+
+export interface MimicDefinitionBase<TKind extends MimicDefinitionKind> {
+    name: string;
+    kind: TKind;
+}
+
+export interface MimicInterfaceDefinition extends MimicDefinitionBase<MimicDefinitionKind.Interface> {
+    properties: MimicProperty[];
+}
+
+export interface MimicTypeDefinition extends MimicDefinitionBase<MimicDefinitionKind.Type> {
+    type: MimicType;
+}
+
+export type MimicDefinition = MimicInterfaceDefinition | MimicTypeDefinition;
 
 export const enum MimicPrimary {
     Sometimes,

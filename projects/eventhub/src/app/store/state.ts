@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { RouterReducerState } from '@ngrx/router-store';
 import { createFeatureSelector } from '@ngrx/store';
-import { MimicDefintion } from 'mimic';
+import { MimicDefinition } from 'mimic';
 
 export const selectRouter = createFeatureSelector<RouterReducerState>('router');
 export const selectApp = createFeatureSelector<EventHubState>('app');
@@ -17,7 +17,7 @@ export interface EventHub {
     name: string;
     connectionString: string;
     codeDefinition: string;
-    mimicDefinitions: MimicDefintion[];
+    mimicDefinitions: MimicDefinition[];
     sendInterval: FuzzyNumber;
     generatorName?: string;
     running: boolean;

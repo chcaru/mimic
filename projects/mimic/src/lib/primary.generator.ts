@@ -8,6 +8,17 @@ type FakerMappings = {
     [T in MimicPrimary]?: (...args: MimicPrimaryArgs<T>) => any;
 };
 
+const minMaxRange = (fn: Function) => (min?: number, max?: number, precision?: number) => fn({
+    max,
+    min,
+    precision,
+});
+
+const abbrContext = (fn: Function) => (abbr?: boolean, context?: boolean) => fn({
+    abbr,
+    context,
+});
+
 const fakerMappings: FakerMappings = {
     [MimicPrimary.asZipCodeByState]: faker.address.zipCodeByState,
     [MimicPrimary.asZipCode]: faker.address.zipCode,
@@ -54,8 +65,8 @@ const fakerMappings: FakerMappings = {
     [MimicPrimary.asDateBetween]: faker.date.between,
     [MimicPrimary.asDateRecent]: faker.date.recent,
     [MimicPrimary.asDateSoon]: faker.date.soon,
-    [MimicPrimary.asMonth]: faker.date.month,
-    [MimicPrimary.asWeekday]: faker.date.weekday,
+    [MimicPrimary.asMonth]: abbrContext(faker.date.month),
+    [MimicPrimary.asWeekday]: abbrContext(faker.date.weekday),
     [MimicPrimary.asFinanceAccount]: faker.finance.account,
     [MimicPrimary.asFinanceAccountName]: faker.finance.accountName,
     [MimicPrimary.asRoutingNumber]: faker.finance.routingNumber,
@@ -70,7 +81,9 @@ const fakerMappings: FakerMappings = {
     [MimicPrimary.asEthereumAddress]: faker.finance.ethereumAddress,
     [MimicPrimary.asFinanceTransactionDescription]: faker.finance.transactionDescription,
     [MimicPrimary.asGitBranch]: faker.git.branch,
-    [MimicPrimary.asGitCommitEntry]: faker.git.commitEntry,
+    [MimicPrimary.asGitCommitEntry]: (merge?: boolean) => faker.git.commitEntry({
+        merge,
+    }),
     [MimicPrimary.asGitCommitMessage]: faker.git.commitMessage,
     [MimicPrimary.asGitCommitSha]: faker.git.commitSha,
     [MimicPrimary.asGitShortSha]: faker.git.shortSha,
@@ -137,16 +150,19 @@ const fakerMappings: FakerMappings = {
     [MimicPrimary.asPhoneNumberFormat]: faker.phone.phoneNumberFormat,
     [MimicPrimary.asPhoneFormats]: faker.phone.phoneFormats,
     [MimicPrimary.asNumber]: faker.random.number,
-    [MimicPrimary.asNumberRange]: faker.random.number,
+    [MimicPrimary.asNumberRange]: minMaxRange(faker.random.number),
     [MimicPrimary.asFloat]: faker.random.float,
-    [MimicPrimary.asFloatRange]: faker.random.float,
+    [MimicPrimary.asFloatRange]: minMaxRange(faker.random.float),
     [MimicPrimary.asArrayElement]: faker.random.arrayElement,
     [MimicPrimary.asUUID]: faker.random.uuid,
     [MimicPrimary.asBoolean]: faker.random.boolean,
     [MimicPrimary.asWord]: faker.random.word,
     [MimicPrimary.asWords]: faker.random.words,
     [MimicPrimary.asLocale]: faker.random.locale,
-    [MimicPrimary.asAlpha]: faker.random.alpha,
+    [MimicPrimary.asAlpha]: (count?: number, upcase?: boolean) => faker.random.alpha({
+        count,
+        upcase,
+    }),
     [MimicPrimary.asAlphaNumeric]: faker.random.alphaNumeric,
     [MimicPrimary.asHexaDecimal]: faker.random.hexaDecimal,
     [MimicPrimary.asFileName]: faker.system.fileName,
@@ -160,7 +176,7 @@ const fakerMappings: FakerMappings = {
     [MimicPrimary.asFilePath]: faker.system.filePath,
     [MimicPrimary.asSemVer]: faker.system.semver,
     [MimicPrimary.asUnixTime]: faker.time.recent,
-    [MimicPrimary.asTime]: faker.time.recent,
+    [MimicPrimary.asTime]: (kind: 'abbr' | 'wide' = 'abbr') => faker.time.recent(kind),
     [MimicPrimary.asVehicle]: faker.vehicle.vehicle,
     [MimicPrimary.asVehicleManufacturer]: faker.vehicle.manufacturer,
     [MimicPrimary.asVehicleModel]: faker.vehicle.model,

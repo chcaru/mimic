@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { EditorOptions, NzCodeEditorComponent } from 'ng-zorro-antd/code-editor';
 import { BehaviorSubject } from 'rxjs';
-import { mimicDefinitions, MimicDefintion, MimicGenerator, mimicGenerators, MimicLib } from 'mimic';
+import { mimicDefinitions, MimicDefinition, MimicGenerator, mimicGenerators, MimicLib } from 'mimic';
 import type * as m from 'monaco-editor';
 
 declare const monaco: typeof m;
@@ -34,7 +34,7 @@ export class MimicDefinerComponent {
     public changeCodeDefinition = new EventEmitter<string>();
 
     @Output()
-    public changeDefinitions = new EventEmitter<MimicDefintion[]>();
+    public changeDefinitions = new EventEmitter<MimicDefinition[]>();
 
     @Output()
     public changeGenerators = new EventEmitter<Record<string, MimicGenerator>>();
@@ -53,7 +53,7 @@ export class MimicDefinerComponent {
     public readonly output$ = new BehaviorSubject<string>('');
 
     public editorLoading = true;
-    public definitions: MimicDefintion[] = [];
+    public definitions: MimicDefinition[] = [];
 
     public editorInit(): void {
         if (!mimicInit) {

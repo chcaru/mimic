@@ -2,7 +2,6 @@ import {
     createAction,
     props,
 } from '@ngrx/store';
-import { MimicDefintion } from 'mimic';
 import { EventHub } from './state';
 
 const createName = (name: string) => `[EventHub] ${name}`;

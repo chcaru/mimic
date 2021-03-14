@@ -1,8 +1,11 @@
 import {
-    MimicDefintion,
+    MimicDefinitionKind,
+    MimicDefinition,
     MimicGenerator,
-    MimicProperty,
-    MimicPropertyKind,
+    MimicInterfaceDefinition,
+    MimicType,
+    MimicTypeDefinition,
+    MimicTypeKind,
 } from './contracts';
 import { generatePrimary } from './primary.generator';
 
@@ -10,53 +13,64 @@ const getRandom = (min: number, max: number) => min + Math.random() * (max - min
 const getRandomInt = (min: number, max: number) => Math.round(getRandom(min, max));
 const getRandomArray = (min: number, max: number) => new Array(getRandomInt(min, max)).fill(null);
 const sometimes = (probability: number, gen: MimicGenerator) => () => probability > Math.random() ? gen() : undefined;
-const maybeSometimes = (prop: MimicProperty, gen: MimicGenerator) => prop.optional
-    ? sometimes(prop.sometimes ?? 0.5, gen)
-    : prop.sometimes !== undefined
-        ? sometimes(prop.sometimes, gen)
-        : gen;
+const maybeSometimes = (prop: MimicType, gen: MimicGenerator) =>
+    prop.optional ? sometimes(prop.sometimes ?? 0.5, gen)
+    : prop.sometimes !== undefined ? sometimes(prop.sometimes, gen)
+    : gen;
 
-const createPropertyGenerator = (property: MimicProperty, generators: Record<string, MimicGenerator>) => {
+const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGenerator>) => {
     let generator: MimicGenerator;
-    switch (property.kind) {
-        case MimicPropertyKind.DefinitionReference:
-            generator = () => generators[property.definition]();
+    switch (type.kind) {
+        case MimicTypeKind.DefinitionReference:
+            generator = () => generators[type.definition]();
             break;
-        case MimicPropertyKind.Literal:
-            generator = () => property.value;
+        case MimicTypeKind.Literal:
+            generator = () => type.value;
             break;
-        case MimicPropertyKind.Primary:
-            generator = () => generatePrimary(property.primary, property.args || []);
+        case MimicTypeKind.Primary:
+            generator = () => generatePrimary(type.primary, type.args || []);
             break;
-        case MimicPropertyKind.Array:
-            const elementGenerator = createPropertyGenerator(property.element as MimicProperty, generators);
-            generator = () => getRandomArray(property.min, property.max).map(elementGenerator);
+        case MimicTypeKind.Array:
+            const elementGenerator = createTypeGenerator(type.element, generators);
+            generator = () => getRandomArray(type.min, type.max).map(elementGenerator);
             break;
-        case MimicPropertyKind.Union:
-            const typeGenerators = property.types.map(type => createPropertyGenerator(type as MimicProperty, generators));
+        case MimicTypeKind.Union:
+            const typeGenerators = type.types.map(type => createTypeGenerator(type, generators));
             generator = () => typeGenerators[getRandomInt(0, typeGenerators.length - 1)]();
             break;
     }
-    return maybeSometimes(property, generator);
+    return maybeSometimes(type, generator);
 };
 
-export const createDefinitionGenerator = (name: string, definitions: Record<string, MimicDefintion>, generators: Record<string, MimicGenerator> = {}) => {
-    const definition = definitions[name];
-    const properties = definition.members.map(member => ({
-        member,
-        generator: createPropertyGenerator(member, generators),
+const createInterfaceDefinitionGenerator = (definition: MimicInterfaceDefinition, generators: Record<string, MimicGenerator>) => {
+    const properties = definition.properties.map(property => ({
+        property,
+        generator: createTypeGenerator(property.type, generators),
     }));
 
     const generator = () => {
         const value = {};
-        for (const property of properties) {
-            value[property.member.name] = property.generator();
+        for (const { property, generator } of properties) {
+            value[property.name] = generator();
         }
         return value;
     };
 
     return {
-        name,
+        name: definition.name,
         generator,
     };
+};
+
+const createTypeDefinitionGenerator = (definition: MimicTypeDefinition, generators: Record<string, MimicGenerator>) => ({
+    name: definition.name,
+    generator: createTypeGenerator(definition.type, generators),
+});
+
+export const createDefinitionGenerator = (name: string, definitions: Record<string, MimicDefinition>, generators: Record<string, MimicGenerator> = {}) => {
+    const definition = definitions[name];
+    switch (definition.kind) {
+        case MimicDefinitionKind.Interface: return createInterfaceDefinitionGenerator(definition, generators);
+        case MimicDefinitionKind.Type: return createTypeDefinitionGenerator(definition, generators);
+    }
 };

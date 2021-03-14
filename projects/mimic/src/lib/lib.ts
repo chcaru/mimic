@@ -57,8 +57,8 @@ export type asDateFuture<Years extends number = number, DateFrom extends string 
 export type asDateBetween<FromDate extends string | number, ToDate extends string> = string;
 export type asDateRecent<Days extends number = number, DateFrom extends string = string> = string;
 export type asDateSoon<Days extends number = number, DateFrom extends string = string> = string;
-export type asMonth = string;
-export type asWeekday = string;
+export type asMonth<Abbreviate extends boolean = boolean, Context extends boolean = boolean> = string;
+export type asWeekday<Abbreviate extends boolean = boolean, Context extends boolean = boolean> = string;
 
 export type asFinanceAccount<Length extends number = number> = string;
 export type asFinanceAccountName = string;
@@ -79,7 +79,7 @@ export type asEthereumAddress = string;
 export type asFinanceTransactionDescription = string;
 
 export type asGitBranch = string;
-export type asGitCommitEntry = string;
+export type asGitCommitEntry<Merge extends boolean = boolean> = string;
 export type asGitCommitMessage = string;
 export type asGitCommitSha = string;
 export type asGitShortSha = string;
@@ -182,7 +182,7 @@ export type asSemVer = string;
 
 // export- type asTime = number;
 export type asUnixTime = number;
-export type asTime<Kind extends 'abbr' | 'wide'> = string;
+export type asTime<Kind extends 'abbr' | 'wide' = 'abbr'> = string;
 
 export type asVehicle = string;
 export type asVehicleManufacturer = string;
@@ -254,8 +254,8 @@ type asDateFuture<Years extends number = number, DateFrom extends string = strin
 type asDateBetween<FromDate extends string | number, ToDate extends string> = string;
 type asDateRecent<Days extends number = number, DateFrom extends string = string> = string;
 type asDateSoon<Days extends number = number, DateFrom extends string = string> = string;
-type asMonth = string;
-type asWeekday = string;
+type asMonth<Abbreviate extends boolean = boolean, Context extends boolean = boolean> = string;
+type asWeekday<Abbreviate extends boolean = boolean, Context extends boolean = boolean> = string;
 
 type asFinanceAccount<Length extends number = number> = string;
 type asFinanceAccountName = string;
@@ -276,7 +276,7 @@ type asEthereumAddress = string;
 type asFinanceTransactionDescription = string;
 
 type asGitBranch = string;
-type asGitCommitEntry = string;
+type asGitCommitEntry<Merge extends boolean = boolean> = string;
 type asGitCommitMessage = string;
 type asGitCommitSha = string;
 type asGitShortSha = string;
@@ -379,7 +379,7 @@ type asSemVer = string;
 
 // export- type asTime = number;
 type asUnixTime = number;
-type asTime<Kind extends 'abbr' | 'wide'> = string;
+type asTime<Kind extends 'abbr' | 'wide' = 'abbr'> = string;
 
 type asVehicle = string;
 type asVehicleManufacturer = string;

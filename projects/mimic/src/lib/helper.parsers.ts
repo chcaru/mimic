@@ -55,9 +55,9 @@ export const getTypeArgsAsLiterals = <T extends MimicPrimary = MimicPrimary>(
         : args.map(arg => tryGetLiteralValue(arg)) as MimicPrimaryArgs<T>
     : [] as any[] as MimicPrimaryArgs<T>;
 
-export const findNearestParentOfKind = (node: Node, kind: SyntaxKind) => {
+export const findNearestParentOfKind = <T extends Node>(node: Node, kind: SyntaxKind): T => {
     while (node && node.kind !== kind) {
         node = node.parent;
     }
-    return node;
+    return node as T;
 };

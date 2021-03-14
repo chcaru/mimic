@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
-import { MimicDefintion } from 'mimic';
+import { MimicDefinition } from 'mimic';
 
 import { StoreFacade } from '../../store/facade';
 
@@ -48,7 +48,7 @@ interface Team {
     // members: Person[]; // Arrays have a random range of 0 to 10 elements
 }
 `;
-    public mimicDefinitions: MimicDefintion[] = [];
+    public mimicDefinitions: MimicDefinition[] = [];
     public codeDefinition: string;
 
     constructor(
