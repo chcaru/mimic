@@ -1,6 +1,4 @@
 
-import { States } from './lib';
-
 export type MimicGenerator = () => any;
 
 export const enum MimicTypeKind {
@@ -9,6 +7,7 @@ export const enum MimicTypeKind {
     Array,
     Literal,
     Union,
+    TemplateLiteral,
 }
 
 export interface MimicTypeBase {
@@ -20,16 +19,6 @@ export interface MimicTypeBase {
 export interface MimicDefintionReference extends MimicTypeBase {
     kind: MimicTypeKind.DefinitionReference;
     definition: string;
-}
-
-export interface MimicLiteral extends MimicTypeBase {
-    kind: MimicTypeKind.Literal;
-    value: string | number | boolean;
-}
-
-export interface MimicUnion extends MimicTypeBase {
-    kind: MimicTypeKind.Union;
-    types: MimicType[];
 }
 
 export type MimicPrimaryArgs = unknown[];
@@ -47,12 +36,45 @@ export interface MimicArray extends MimicTypeBase {
     max: number;
 }
 
+export interface MimicLiteral extends MimicTypeBase {
+    kind: MimicTypeKind.Literal;
+    value: string | number | boolean;
+}
+
+export interface MimicUnion extends MimicTypeBase {
+    kind: MimicTypeKind.Union;
+    types: MimicType[];
+}
+
+export const enum MimicTemplateLiteralPartKind {
+    StringLiteral,
+    Type,
+}
+
+export interface MimicTemplateLiteralStringLiteralPart {
+    kind: MimicTemplateLiteralPartKind.StringLiteral;
+    text: string;
+}
+
+export interface MimicTemplateLiteralTypePart {
+    kind: MimicTemplateLiteralPartKind.Type;
+    type: MimicType;
+}
+
+export type MimicTemplateLiteralPart = MimicTemplateLiteralStringLiteralPart | MimicTemplateLiteralTypePart;
+
+export interface MimicTemplateLiteral extends MimicTypeBase {
+    kind: MimicTypeKind.TemplateLiteral;
+    parts: MimicTemplateLiteralPart[];
+}
+
 export type MimicType =
     MimicDefintionReference
     | MimicPrimary
     | MimicArray
     | MimicLiteral
-    | MimicUnion;
+    | MimicUnion
+    | MimicTemplateLiteral;
 
 export interface MimicProperty {
     name: string;
@@ -61,7 +83,7 @@ export interface MimicProperty {
 
 export const enum MimicDefinitionKind {
     Interface,
-    Type,
+    TypeAlias,
 }
 
 export interface MimicDefinitionBase<TKind extends MimicDefinitionKind> {
@@ -73,7 +95,7 @@ export interface MimicInterfaceDefinition extends MimicDefinitionBase<MimicDefin
     properties: MimicProperty[];
 }
 
-export interface MimicTypeDefinition extends MimicDefinitionBase<MimicDefinitionKind.Type> {
+export interface MimicTypeDefinition extends MimicDefinitionBase<MimicDefinitionKind.TypeAlias> {
     type: MimicType;
 }
 

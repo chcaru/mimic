@@ -6,6 +6,7 @@ import {
     MimicType,
     MimicTypeDefinition,
     MimicTypeKind,
+    MimicTemplateLiteralPartKind,
 } from './contracts';
 import { generatePrimary } from './primary.generator';
 
@@ -31,12 +32,28 @@ const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGe
             generator = () => generatePrimary(type.primary, type.args || []);
             break;
         case MimicTypeKind.Array:
-            const elementGenerator = createTypeGenerator(type.element, generators);
-            generator = () => getRandomArray(type.min, type.max).map(elementGenerator);
+            const arrayElementGenerator = createTypeGenerator(type.element, generators);
+            generator = () => getRandomArray(type.min, type.max).map(arrayElementGenerator);
             break;
         case MimicTypeKind.Union:
-            const typeGenerators = type.types.map(type => createTypeGenerator(type, generators));
-            generator = () => typeGenerators[getRandomInt(0, typeGenerators.length - 1)]();
+            const unionTypeGenerators = type.types.map(type => createTypeGenerator(type, generators));
+            generator = () => unionTypeGenerators[getRandomInt(0, unionTypeGenerators.length - 1)]();
+            break;
+        case MimicTypeKind.TemplateLiteral:
+            const { parts } = type;
+            const templateLiteralTypeGenerators = parts.map(part => part.kind === MimicTemplateLiteralPartKind.StringLiteral
+                ? part.text
+                : createTypeGenerator(part.type, generators),
+            );
+            generator = () => {
+                let templateOutput = '';
+                for (let i = 0; i < templateLiteralTypeGenerators.length; i++) {
+                    templateOutput += parts[i].kind === MimicTemplateLiteralPartKind.StringLiteral
+                        ? templateLiteralTypeGenerators[i] as string
+                        : (templateLiteralTypeGenerators[i] as MimicGenerator)();
+                }
+                return templateOutput;
+            };
             break;
     }
     return maybeSometimes(type, generator);
@@ -62,7 +79,7 @@ const createInterfaceDefinitionGenerator = (definition: MimicInterfaceDefinition
     };
 };
 
-const createTypeDefinitionGenerator = (definition: MimicTypeDefinition, generators: Record<string, MimicGenerator>) => ({
+const createTypeAliasDefinitionGenerator = (definition: MimicTypeDefinition, generators: Record<string, MimicGenerator>) => ({
     name: definition.name,
     generator: createTypeGenerator(definition.type, generators),
 });
@@ -71,6 +88,6 @@ export const createDefinitionGenerator = (name: string, definitions: Record<stri
     const definition = definitions[name];
     switch (definition.kind) {
         case MimicDefinitionKind.Interface: return createInterfaceDefinitionGenerator(definition, generators);
-        case MimicDefinitionKind.Type: return createTypeDefinitionGenerator(definition, generators);
+        case MimicDefinitionKind.TypeAlias: return createTypeAliasDefinitionGenerator(definition, generators);
     }
 };

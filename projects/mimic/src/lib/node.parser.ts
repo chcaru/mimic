@@ -36,7 +36,7 @@ const parsePropertySignature = (propertySignature: PropertySignature): MimicProp
 };
 
 const parseTypeAliasDeclaration = (typeAliasDeclaration: TypeAliasDeclaration): MimicTypeDefinition => ({
-    kind: MimicDefinitionKind.Type,
+    kind: MimicDefinitionKind.TypeAlias,
     name: getPropertyName(typeAliasDeclaration.name),
     type: parsePrimary(typeAliasDeclaration.type),
 });

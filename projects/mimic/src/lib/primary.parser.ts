@@ -4,6 +4,10 @@ import {
     ParenthesizedTypeNode,
     PropertySignature,
     SyntaxKind,
+    TemplateHead,
+    TemplateLiteralTypeNode,
+    TemplateMiddle,
+    TemplateTail,
     TypeReferenceNode,
     UnionTypeNode,
 } from 'typescript';
@@ -18,6 +22,9 @@ import {
     MimicLiteral,
     MimicPrimary,
     MimicUnion,
+    MimicTemplateLiteralPart,
+    MimicTemplateLiteralPartKind,
+    MimicTemplateLiteral,
 } from './contracts';
 import {
     findNearestParentOfKind,
@@ -268,9 +275,32 @@ const primaryParsers = {
     [SyntaxKind.ParenthesizedType]: (node: ParenthesizedTypeNode) => parsePrimary(node.type),
     [SyntaxKind.StringKeyword]: autoPrimary,
     [SyntaxKind.NumberKeyword]: autoPrimary,
+    [SyntaxKind.TemplateLiteralType]: (node: TemplateLiteralTypeNode): MimicTemplateLiteral => {
+        const parts: MimicTemplateLiteralPart[] = [];
+        const tryAddTemplateLiteral = (templateNode: TemplateHead | TemplateMiddle | TemplateTail) => {
+            if (templateNode.text) {
+                parts.push({
+                    kind: MimicTemplateLiteralPartKind.StringLiteral,
+                    text: templateNode.text,
+                });
+            }
+        };
+        tryAddTemplateLiteral(node.head);
+        for (const templateSpan of node.templateSpans) {
+            parts.push({
+                kind: MimicTemplateLiteralPartKind.Type,
+                type: parsePrimary(templateSpan.type),
+            });
+            tryAddTemplateLiteral(templateSpan.literal);
+        }
+        return {
+            kind: MimicTypeKind.TemplateLiteral,
+            parts,
+        };
+    },
 };
 
-export const parsePrimary = (node: Node) => {
+export const parsePrimary = (node: Node): MimicType => {
     const primaryNodeParser = primaryParsers[node.kind];
     return primaryNodeParser
         ? primaryNodeParser(node)
