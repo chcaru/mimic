@@ -28,32 +28,36 @@ interface Name {
 }
 
 interface Address {
-    address: asStreetAddress;
+    address; // Auto detect mock data
     secondaryAddress?: asSecondaryAddress; // Properties can be optional. These have a 50% chance of being undefined
 }
 
 interface BitcoinWallet {
     type: 'bitcoin'; // Use type literals for static data
-    bitcoinAddress: string; // Auto detect mock data
+    bitcoinAddress;
 }
 
 interface EtheriumWallet {
     type: 'etherium';
-    etheriumAddress: string;
+    etheriumAddress;
 }
+
+// Use type aliases
+type DigitalWallet = BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
 
 interface Person {
     name: Name; // Reference other defined types
     address: Address;
-    digitalWallet?: BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
+    digitalWallet?: DigitalWallet;
     age: asNumberRange<20, 30>; // Some mock data generators can take parameters to customize them.
-    image?: Sometimes<.75, asImagePeople>; // Sometimes is a special type that lets you specify the chance a value will be undefined
+    image?: Sometimes<.75, asImagePeople>; // Sometimes is a special type that lets you specify the chance a value will be defined
 }
 
 interface Team {
     members: BoundArray<Person, 6, 2>; // BoundArray is a special type that lets you specify the range of an array
-    // members: Person[]; // Arrays have a random range of 0 to 10 elements
 }
+
+type People = Person[]; // Arrays have a random range of 0 to 10 elements
 `;
 
     public readonly editorOptions: EditorOptions = {
@@ -80,7 +84,7 @@ interface Team {
                 + JSON.stringify(genDef.generator(), null, 4) + ';';
             outputs.push(output);
         }
-        const output = outputs.join('\n\n');
+        const output = outputs.join('\n');
         this.output$.next(output);
         this.outputEditor.writeValue(output);
     }

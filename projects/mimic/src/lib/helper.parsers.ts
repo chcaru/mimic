@@ -5,7 +5,6 @@ import {
     TypeNode,
 } from 'typescript';
 import {
-    MimicPrimary,
     MimicPrimaryArgs,
 } from './contracts';
 
@@ -47,13 +46,14 @@ export const getPropertyName = (node: PropertyName) =>
         ? node.escapedText as string
         : undefined;
 
-export const getTypeArgsAsLiterals = <T extends MimicPrimary = MimicPrimary>(
-    args: readonly TypeNode[] | undefined, ...indices: number[]
-): MimicPrimaryArgs<T> => args
+export const getTypeArgsAsLiterals = (
+    args: readonly TypeNode[] | undefined,
+    ...indices: number[]
+): MimicPrimaryArgs => args
     ? indices.length
-        ? indices.map(index => tryGetLiteralValue(args[index])) as MimicPrimaryArgs<T>
-        : args.map(arg => tryGetLiteralValue(arg)) as MimicPrimaryArgs<T>
-    : [] as any[] as MimicPrimaryArgs<T>;
+        ? indices.map(index => tryGetLiteralValue(args[index]))
+        : args.map(arg => tryGetLiteralValue(arg))
+    : [] as MimicPrimaryArgs;
 
 export const findNearestParentOfKind = <T extends Node>(node: Node, kind: SyntaxKind): T => {
     while (node && node.kind !== kind) {

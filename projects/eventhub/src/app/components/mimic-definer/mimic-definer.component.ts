@@ -84,7 +84,7 @@ export class MimicDefinerComponent {
                     + JSON.stringify(genDef.generator(), null, 4) + ';';
                 outputs.push(output);
             }
-            const output = outputs.join('\n\n');
+            const output = outputs.join('\n');
             this.output$.next(output);
             this.outputEditor.writeValue(output);
         }

@@ -11,46 +11,36 @@ export const enum MimicTypeKind {
     Union,
 }
 
-export interface MimicPropertyBase {
+export interface MimicTypeBase {
     kind: MimicTypeKind;
     optional?: boolean;
     sometimes?: number;
 }
 
-export interface MimicPropertyDefintionReference extends MimicPropertyBase {
+export interface MimicDefintionReference extends MimicTypeBase {
     kind: MimicTypeKind.DefinitionReference;
     definition: string;
 }
 
-export interface MimicPropertyLiteral extends MimicPropertyBase {
+export interface MimicLiteral extends MimicTypeBase {
     kind: MimicTypeKind.Literal;
     value: string | number | boolean;
 }
 
-export interface MimicPropertyUnion extends MimicPropertyBase {
+export interface MimicUnion extends MimicTypeBase {
     kind: MimicTypeKind.Union;
     types: MimicType[];
 }
 
-export type MimicPrimaryArgs<T extends MimicPrimary> =
-    T extends MimicPrimary.BoundArray ? [type: string, max: number, min: number]
-    : T extends MimicPrimary.Sometimes ? [propability: number, type: string]
-    : T extends MimicPrimary.asZipCodeByState ? [state: States]
-    : T extends MimicPrimary.asState ? [useAbbr?: boolean]
-    : T extends MimicPrimary.asStreetAddress ? [useFullAddress?: boolean]
-    : T extends MimicPrimary.asLatitude ? [max?: number, min?: number]
-    : T extends MimicPrimary.asLongitude ? [max?: number, min?: number]
-    : T extends MimicPrimary.asFirstName ? [gender?: number]
-    : T extends MimicPrimary.asLastName ? [gender?: number]
-    : any[];
+export type MimicPrimaryArgs = unknown[];
 
-export interface MimicPropertyPrimary<T extends MimicPrimary = MimicPrimary> extends MimicPropertyBase {
+export interface MimicPrimary<T extends MimicPrimaryKind = MimicPrimaryKind> extends MimicTypeBase {
     kind: MimicTypeKind.Primary;
     primary: T;
-    args?: MimicPrimaryArgs<T>;
+    args?: MimicPrimaryArgs;
 }
 
-export interface MimicPropertyArray extends MimicPropertyBase {
+export interface MimicArray extends MimicTypeBase {
     kind: MimicTypeKind.Array;
     element: MimicType;
     min: number;
@@ -58,11 +48,11 @@ export interface MimicPropertyArray extends MimicPropertyBase {
 }
 
 export type MimicType =
-    MimicPropertyDefintionReference
-    | MimicPropertyPrimary
-    | MimicPropertyArray
-    | MimicPropertyLiteral
-    | MimicPropertyUnion;
+    MimicDefintionReference
+    | MimicPrimary
+    | MimicArray
+    | MimicLiteral
+    | MimicUnion;
 
 export interface MimicProperty {
     name: string;
@@ -89,7 +79,7 @@ export interface MimicTypeDefinition extends MimicDefinitionBase<MimicDefinition
 
 export type MimicDefinition = MimicInterfaceDefinition | MimicTypeDefinition;
 
-export const enum MimicPrimary {
+export const enum MimicPrimaryKind {
     Sometimes,
     BoundArray,
     asZipCodeByState,

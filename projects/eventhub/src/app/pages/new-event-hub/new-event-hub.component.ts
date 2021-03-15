@@ -13,15 +13,15 @@ import { StoreFacade } from '../../store/facade';
 export class NewEventHubComponent {
 
     public readonly exampleMimic = `
-// Generate mock data using TypeScript
+// Define your mock data use TypeScript
 
 interface Name {
-    firstName; // Auto detect mock data
-    lastName;
+    firstName: asFirstName; // Use built in mock data generators. These start with "as", see auto complete for more
+    lastName: asLastName;
 }
 
 interface Address {
-    address: asStreetAddress; // Use built in mock data generators. These start with "as", see auto complete for more
+    address; // Auto detect mock data
     secondaryAddress?: asSecondaryAddress; // Properties can be optional. These have a 50% chance of being undefined
 }
 
@@ -35,18 +35,23 @@ interface EtheriumWallet {
     etheriumAddress;
 }
 
+// Use type aliases
+type DigitalWallet = BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
+
 interface Person {
     name: Name; // Reference other defined types
     address: Address;
-    digitalWallet?: BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
+    digitalWallet?: DigitalWallet;
     age: asNumberRange<20, 30>; // Some mock data generators can take parameters to customize them.
-    image?: Sometimes<.75, asImagePeople>; // Sometimes is a special type that lets you specify the chance a value will be undefined
+    image?: Sometimes<.75, asImagePeople>; // Sometimes is a special type that lets you specify the chance a value will be defined
 }
 
 interface Team {
     members: BoundArray<Person, 6, 2>; // BoundArray is a special type that lets you specify the range of an array
-    // members: Person[]; // Arrays have a random range of 0 to 10 elements
 }
+
+type People = Person[]; // Arrays have a random range of 0 to 10 elements
+
 `;
     public mimicDefinitions: MimicDefinition[] = [];
     public codeDefinition: string;
