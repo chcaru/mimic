@@ -2,7 +2,6 @@ import {
     SyntaxKind,
     InterfaceDeclaration,
     Node,
-    PropertySignature,
     TypeAliasDeclaration,
 } from 'typescript';
 
@@ -10,40 +9,22 @@ import {
     MimicDefinition,
     MimicDefinitionKind,
     MimicInterfaceDefinition,
-    MimicProperty,
     MimicTypeDefinition,
 } from './contracts';
 import { getPropertyName } from './helper.parsers';
-import { autoPrimary, parsePrimary } from './primary.parser';
-
-const parseInterfaceDeclaration = (interfaceDeclaration: InterfaceDeclaration): MimicInterfaceDefinition => ({
-    kind: MimicDefinitionKind.Interface,
-    name: getPropertyName(interfaceDeclaration.name),
-    properties: interfaceDeclaration.members.map((member: PropertySignature) => parsePropertySignature(member)),
-});
-
-const parsePropertySignature = (propertySignature: PropertySignature): MimicProperty => {
-    const properties = propertySignature.type
-        ? parsePrimary(propertySignature.type)
-        : autoPrimary(propertySignature);
-    return {
-        name: getPropertyName(propertySignature.name),
-        type: {
-            ...properties,
-            optional: !!propertySignature.questionToken,
-        },
-    };
-};
-
-const parseTypeAliasDeclaration = (typeAliasDeclaration: TypeAliasDeclaration): MimicTypeDefinition => ({
-    kind: MimicDefinitionKind.TypeAlias,
-    name: getPropertyName(typeAliasDeclaration.name),
-    type: parsePrimary(typeAliasDeclaration.type),
-});
+import { parsePrimary } from './primary.parser';
 
 const parsers = {
-    [SyntaxKind.InterfaceDeclaration]: parseInterfaceDeclaration,
-    [SyntaxKind.TypeAliasDeclaration]: parseTypeAliasDeclaration,
+    [SyntaxKind.InterfaceDeclaration]: (interfaceDeclaration: InterfaceDeclaration): MimicInterfaceDefinition => ({
+        kind: MimicDefinitionKind.Interface,
+        name: getPropertyName(interfaceDeclaration.name),
+        type: parsePrimary(interfaceDeclaration),
+    }),
+    [SyntaxKind.TypeAliasDeclaration]: (typeAliasDeclaration: TypeAliasDeclaration): MimicTypeDefinition => ({
+        kind: MimicDefinitionKind.TypeAlias,
+        name: getPropertyName(typeAliasDeclaration.name),
+        type: parsePrimary(typeAliasDeclaration.type),
+    }),
 };
 
 export const parseNode = (node: Node): MimicDefinition => {

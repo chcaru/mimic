@@ -1,5 +1,12 @@
 
-export type MimicGenerator = () => any;
+export type MimicGeneratorOutput =
+    number
+    | string
+    | undefined
+    | null
+    | { [key: string]: MimicGeneratorOutput }
+    | MimicGeneratorOutput[];
+export type MimicGenerator = () => MimicGeneratorOutput;
 
 export const enum MimicTypeKind {
     DefinitionReference,
@@ -8,12 +15,12 @@ export const enum MimicTypeKind {
     Literal,
     Union,
     TemplateLiteral,
+    Object,
+    Optional,
 }
 
 export interface MimicTypeBase {
     kind: MimicTypeKind;
-    optional?: boolean;
-    sometimes?: number;
 }
 
 export interface MimicDefintionReference extends MimicTypeBase {
@@ -68,34 +75,49 @@ export interface MimicTemplateLiteral extends MimicTypeBase {
     parts: MimicTemplateLiteralPart[];
 }
 
+export interface MimicOptional extends MimicTypeBase {
+    kind: MimicTypeKind.Optional;
+    chance: number;
+    type: MimicType;
+}
+
+export interface MimicObjectProperty {
+    name: string;
+    type: MimicType;
+}
+
+export interface MimicObject extends MimicTypeBase {
+    kind: MimicTypeKind.Object;
+    properties: MimicObjectProperty[];
+}
+
 export type MimicType =
     MimicDefintionReference
     | MimicPrimary
     | MimicArray
     | MimicLiteral
     | MimicUnion
-    | MimicTemplateLiteral;
-
-export interface MimicProperty {
-    name: string;
-    type: MimicType;
-}
+    | MimicTemplateLiteral
+    | MimicObject
+    | MimicOptional;
 
 export const enum MimicDefinitionKind {
     Interface,
     TypeAlias,
 }
 
-export interface MimicDefinitionBase<TKind extends MimicDefinitionKind> {
+export interface MimicDefinitionBase {
+    kind: MimicDefinitionKind;
     name: string;
-    kind: TKind;
 }
 
-export interface MimicInterfaceDefinition extends MimicDefinitionBase<MimicDefinitionKind.Interface> {
-    properties: MimicProperty[];
+export interface MimicInterfaceDefinition extends MimicDefinitionBase {
+    kind: MimicDefinitionKind.Interface;
+    type: MimicType;
 }
 
-export interface MimicTypeDefinition extends MimicDefinitionBase<MimicDefinitionKind.TypeAlias> {
+export interface MimicTypeDefinition extends MimicDefinitionBase {
+    kind: MimicDefinitionKind.TypeAlias;
     type: MimicType;
 }
 

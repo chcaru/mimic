@@ -1,5 +1,6 @@
 import {
     ArrayTypeNode,
+    InterfaceDeclaration,
     Node,
     ParenthesizedTypeNode,
     PropertySignature,
@@ -8,6 +9,7 @@ import {
     TemplateLiteralTypeNode,
     TemplateMiddle,
     TemplateTail,
+    TypeLiteralNode,
     TypeReferenceNode,
     UnionTypeNode,
 } from 'typescript';
@@ -25,6 +27,8 @@ import {
     MimicTemplateLiteralPart,
     MimicTemplateLiteralPartKind,
     MimicTemplateLiteral,
+    MimicObject,
+    MimicOptional,
 } from './contracts';
 import {
     findNearestParentOfKind,
@@ -36,7 +40,7 @@ import {
     tryGetLiteralValue,
 } from './helper.parsers';
 
-const simpleParser = <T extends MimicPrimaryKind>(primary: T) => (ref: TypeReferenceNode): Partial<MimicPrimary<T>> => ({
+const simpleParser = <T extends MimicPrimaryKind>(primary: T) => (ref: TypeReferenceNode): MimicPrimary<T> => ({
     kind: MimicTypeKind.Primary,
     primary,
     args: getTypeArgsAsLiterals(ref.typeArguments),
@@ -45,11 +49,12 @@ const simpleParser = <T extends MimicPrimaryKind>(primary: T) => (ref: TypeRefer
 const mimicPrimaryParsers = {
     States: true,
     Genders: true,
-    Sometimes: (ref: TypeReferenceNode): Partial<MimicType> => ({
-        sometimes: getLiteralNumber(ref.typeArguments[0]),
-        ...parsePrimary(ref.typeArguments[1] as TypeReferenceNode),
+    Sometimes: (ref: TypeReferenceNode): MimicOptional => ({
+        kind: MimicTypeKind.Optional,
+        chance: getLiteralNumber(ref.typeArguments[0]),
+        type: parsePrimary(ref.typeArguments[1] as TypeReferenceNode),
     }),
-    BoundArray: (ref: TypeReferenceNode): Partial<MimicType> => ({
+    BoundArray: (ref: TypeReferenceNode): MimicArray => ({
         kind: MimicTypeKind.Array,
         max: getLiteralNumber(ref.typeArguments[1]) ?? 10,
         min: getLiteralNumber(ref.typeArguments[2]) ?? 0,
@@ -167,14 +172,14 @@ const mimicPrimaryParsers = {
     asLoremParagraphs: simpleParser(MimicPrimaryKind.asLoremParagraphs),
     asLoremText: simpleParser(MimicPrimaryKind.asLoremText),
     asLoremLines: simpleParser(MimicPrimaryKind.asLoremLines),
-    asFirstName: (ref: TypeReferenceNode): Partial<MimicPrimary<MimicPrimaryKind.asFirstName>> => ({
+    asFirstName: (ref: TypeReferenceNode): MimicPrimary<MimicPrimaryKind.asFirstName> => ({
         kind: MimicTypeKind.Primary,
         primary: MimicPrimaryKind.asFirstName,
         args: ref.typeArguments
             ? [getLiteralString(ref.typeArguments[0]).startsWith('m') ? 0 : 1]
             : [],
     }),
-    asLastName: (ref: TypeReferenceNode): Partial<MimicPrimary<MimicPrimaryKind.asLastName>> => ({
+    asLastName: (ref: TypeReferenceNode): MimicPrimary<MimicPrimaryKind.asLastName> => ({
         kind: MimicTypeKind.Primary,
         primary: MimicPrimaryKind.asLastName,
         args: ref.typeArguments
@@ -235,7 +240,7 @@ const primaries = Object
     .filter(key => key.startsWith('as'));
 const primaryNames = primaries.map(primary => primary.substr(2).toLowerCase());
 const tryDetectPrimary = (name: string) => primaries[findBestMatch(name, primaryNames).bestMatchIndex];
-export const autoPrimary = (node: Node) => {
+const autoPrimary = (node: Node) => {
     // TODO: include name of interface / type for more context?
     const propertySignature = findNearestParentOfKind<PropertySignature>(node, SyntaxKind.PropertySignature);
     if (propertySignature) {
@@ -245,6 +250,24 @@ export const autoPrimary = (node: Node) => {
         return parser(node);
     }
 };
+
+const objectParser = (node: TypeLiteralNode | InterfaceDeclaration): MimicObject => ({
+    kind: MimicTypeKind.Object,
+    properties: node.members.map((node: PropertySignature) => ({
+        name: getPropertyName(node.name),
+        type: node.questionToken
+            ? {
+                kind: MimicTypeKind.Optional,
+                chance: 0.5,
+                type: node.type
+                    ? parsePrimary(node.type)
+                    : autoPrimary(node),
+            }
+            : node.type
+                ? parsePrimary(node.type)
+                : autoPrimary(node),
+    })),
+});
 
 const primaryParsers = {
     [SyntaxKind.TypeReference]: (node: Node) => {
@@ -258,15 +281,15 @@ const primaryParsers = {
                 definition: name,
             } as MimicDefintionReference;
     },
-    [SyntaxKind.LiteralType]: (node: Node): Partial<MimicLiteral> => ({
+    [SyntaxKind.LiteralType]: (node: Node): MimicLiteral => ({
         kind: MimicTypeKind.Literal,
         value: tryGetLiteralValue(node),
     }),
-    [SyntaxKind.UnionType]: (node: UnionTypeNode): Partial<MimicUnion> => ({
+    [SyntaxKind.UnionType]: (node: UnionTypeNode): MimicUnion => ({
         kind: MimicTypeKind.Union,
         types: node.types.map(parsePrimary),
     }),
-    [SyntaxKind.ArrayType]: (node: ArrayTypeNode): Partial<MimicArray> => ({
+    [SyntaxKind.ArrayType]: (node: ArrayTypeNode): MimicArray => ({
         kind: MimicTypeKind.Array,
         max: 10,
         min: 0,
@@ -298,6 +321,8 @@ const primaryParsers = {
             parts,
         };
     },
+    [SyntaxKind.TypeLiteral]: objectParser,
+    [SyntaxKind.InterfaceDeclaration]: objectParser,
 };
 
 export const parsePrimary = (node: Node): MimicType => {
