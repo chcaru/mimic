@@ -23,6 +23,7 @@ interface Name {
 interface Address {
     address; // Auto detect mock data
     secondaryAddress?: asSecondaryAddress; // Properties can be optional. These have a 50% chance of being undefined
+    city: \`City: \${asCity}\`; // Use template literals to define compound strings
 }
 
 interface BitcoinWallet {
@@ -35,7 +36,7 @@ interface EtheriumWallet {
     etheriumAddress;
 }
 
-// Use type aliases
+// Use type aliases to create convenient types
 type DigitalWallet = BitcoinWallet | EtheriumWallet; // Union types for an equal chance at any of them
 
 interface Person {
@@ -50,8 +51,8 @@ interface Team {
     members: BoundArray<Person, 6, 2>; // BoundArray is a special type that lets you specify the range of an array
 }
 
+// Use type aliases to represent non-object types
 type People = Person[]; // Arrays have a random range of 0 to 10 elements
-
 `;
     public mimicDefinitions: MimicDefinition[] = [];
     public codeDefinition: string;
