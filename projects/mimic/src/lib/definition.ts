@@ -12,8 +12,8 @@ import {
 
 import { getPropertyName } from './helper.parsers';
 import { lib } from './lib';
-import { parseNode } from './node.parser';
-import { isBuiltInType } from './primary.parser';
+import { parseDefinition } from './definition.parser';
+import { isBuiltInType } from './type.parser';
 
 const definitionFileName = 'defintion.ts';
 
@@ -62,5 +62,5 @@ export const getDefinitions = (tsCodeDefinition: string) => {
                 ),
             ),
         )
-        .map(node => parseNode(node));
+        .map(node => parseDefinition(node));
 };

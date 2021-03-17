@@ -52,13 +52,13 @@ const mimicPrimaryParsers = {
     Sometimes: (ref: TypeReferenceNode): MimicOptional => ({
         kind: MimicTypeKind.Optional,
         chance: getLiteralNumber(ref.typeArguments[0]),
-        type: parsePrimary(ref.typeArguments[1] as TypeReferenceNode),
+        type: parseType(ref.typeArguments[1] as TypeReferenceNode),
     }),
     BoundArray: (ref: TypeReferenceNode): MimicArray => ({
         kind: MimicTypeKind.Array,
         max: getLiteralNumber(ref.typeArguments[1]) ?? 10,
         min: getLiteralNumber(ref.typeArguments[2]) ?? 0,
-        element: parsePrimary(ref.typeArguments[0]),
+        element: parseType(ref.typeArguments[0]),
     }),
     asZipCodeByState: simpleParser(MimicPrimaryKind.asZipCodeByState),
     asZipCode: simpleParser(MimicPrimaryKind.asZipCode),
@@ -260,16 +260,16 @@ const objectParser = (node: TypeLiteralNode | InterfaceDeclaration): MimicObject
                 kind: MimicTypeKind.Optional,
                 chance: 0.5,
                 type: node.type
-                    ? parsePrimary(node.type)
+                    ? parseType(node.type)
                     : autoPrimary(node),
             }
             : node.type
-                ? parsePrimary(node.type)
+                ? parseType(node.type)
                 : autoPrimary(node),
     })),
 });
 
-const primaryParsers = {
+const typeParsers = {
     [SyntaxKind.TypeReference]: (node: Node) => {
         const name = getTypeName(node);
         const parser = mimicPrimaryParsers[name];
@@ -287,15 +287,15 @@ const primaryParsers = {
     }),
     [SyntaxKind.UnionType]: (node: UnionTypeNode): MimicUnion => ({
         kind: MimicTypeKind.Union,
-        types: node.types.map(parsePrimary),
+        types: node.types.map(parseType),
     }),
     [SyntaxKind.ArrayType]: (node: ArrayTypeNode): MimicArray => ({
         kind: MimicTypeKind.Array,
         max: 10,
         min: 0,
-        element: parsePrimary(node.elementType),
+        element: parseType(node.elementType),
     }),
-    [SyntaxKind.ParenthesizedType]: (node: ParenthesizedTypeNode) => parsePrimary(node.type),
+    [SyntaxKind.ParenthesizedType]: (node: ParenthesizedTypeNode) => parseType(node.type),
     [SyntaxKind.StringKeyword]: autoPrimary,
     [SyntaxKind.NumberKeyword]: autoPrimary,
     [SyntaxKind.TemplateLiteralType]: (node: TemplateLiteralTypeNode): MimicTemplateLiteral => {
@@ -312,7 +312,7 @@ const primaryParsers = {
         for (const templateSpan of node.templateSpans) {
             parts.push({
                 kind: MimicTemplateLiteralPartKind.Type,
-                type: parsePrimary(templateSpan.type),
+                type: parseType(templateSpan.type),
             });
             tryAddTemplateLiteral(templateSpan.literal);
         }
@@ -325,9 +325,9 @@ const primaryParsers = {
     [SyntaxKind.InterfaceDeclaration]: objectParser,
 };
 
-export const parsePrimary = (node: Node): MimicType => {
-    const primaryNodeParser = primaryParsers[node.kind];
-    return primaryNodeParser
-        ? primaryNodeParser(node)
+export const parseType = (node: Node): MimicType => {
+    const typeParser = typeParsers[node.kind];
+    return typeParser
+        ? typeParser(node)
         : undefined;
 };
