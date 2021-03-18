@@ -36,7 +36,7 @@ export type asProduct = string;
 export type asProductDescription = string;
 
 // export- type asSuffixes = string[];
-export type asCompanyName<Format extends string> = string;
+export type asCompanyName<Format extends string = string> = string;
 export type asCompanySuffix = string;
 export type asCompanyCatchPhrase = string;
 // export- type asCompanyBS = string;
@@ -233,7 +233,7 @@ type asProduct = string;
 type asProductDescription = string;
 
 // export- type asSuffixes = string[];
-type asCompanyName<Format extends string> = string;
+type asCompanyName<Format extends string = string> = string;
 type asCompanySuffix = string;
 type asCompanyCatchPhrase = string;
 // export- type asCompanyBS = string;

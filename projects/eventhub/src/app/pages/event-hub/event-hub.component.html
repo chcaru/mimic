@@ -3,9 +3,9 @@
         <div class="flex column controls">
             <label>Send event interval (ms)</label>
             <nz-slider
-                [nzMin]="100"
+                [nzMin]="1"
                 [nzMax]="10000"
-                [nzStep]="50"
+                [nzStep]="1"
                 [ngModel]="eventHub.sendInterval.value"
                 (nzOnAfterChange)="facade.updateEventHub({
                     id: eventHub.id,
