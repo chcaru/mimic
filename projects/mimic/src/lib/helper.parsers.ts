@@ -3,6 +3,7 @@ import {
     Node,
     PropertyName,
     TypeNode,
+    LiteralTypeNode,
 } from 'typescript';
 import {
     MimicPrimaryArgs,
@@ -32,11 +33,21 @@ export const getLiteralNumber = (node: Node) => {
 };
 
 export const tryGetLiteralValue = (node: Node) => {
-    const text = getLiteralString(node);
-    const number = getLiteralNumber(node);
-    const bool = getLiteralBoolean(node);
-    const value = bool ?? (number == null ? text : number);
-    return value;
+    if (node.kind === SyntaxKind.LiteralType) {
+        const literal = (node as LiteralTypeNode).literal;
+        switch (literal.kind) {
+            case SyntaxKind.TrueKeyword: return true;
+            case SyntaxKind.FalseKeyword: return false;
+            case SyntaxKind.NullKeyword: return null;
+            case SyntaxKind.StringLiteral: return literal.text;
+            case SyntaxKind.FirstLiteralToken:
+                const numberLiteral = +literal.text;
+                return Number.isNaN(numberLiteral)
+                    ? undefined
+                    : numberLiteral;
+        }
+    }
+    return undefined;
 };
 
 export const getTypeName = (node: Node) => (node as any)?.typeName?.escapedText as string;

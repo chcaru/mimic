@@ -1,7 +1,9 @@
 import {
     ArrayTypeNode,
     InterfaceDeclaration,
+    NamedTupleMember,
     Node,
+    OptionalTypeNode,
     ParenthesizedTypeNode,
     PropertySignature,
     SyntaxKind,
@@ -9,6 +11,7 @@ import {
     TemplateLiteralTypeNode,
     TemplateMiddle,
     TemplateTail,
+    TupleTypeNode,
     TypeLiteralNode,
     TypeReferenceNode,
     UnionTypeNode,
@@ -29,6 +32,7 @@ import {
     MimicTemplateLiteral,
     MimicObject,
     MimicOptional,
+    MimicTuple,
 } from './contracts';
 import {
     findNearestParentOfKind,
@@ -285,6 +289,10 @@ const typeParsers = {
         kind: MimicTypeKind.Literal,
         value: tryGetLiteralValue(node),
     }),
+    [SyntaxKind.UndefinedKeyword]: (): MimicLiteral => ({
+        kind: MimicTypeKind.Literal,
+        value: undefined,
+    }),
     [SyntaxKind.UnionType]: (node: UnionTypeNode): MimicUnion => ({
         kind: MimicTypeKind.Union,
         types: node.types.map(parseType),
@@ -323,6 +331,16 @@ const typeParsers = {
     },
     [SyntaxKind.TypeLiteral]: objectParser,
     [SyntaxKind.InterfaceDeclaration]: objectParser,
+    [SyntaxKind.OptionalType]: (node: OptionalTypeNode): MimicOptional => ({
+        kind: MimicTypeKind.Optional,
+        chance: 0.5,
+        type: parseType(node.type),
+    }),
+    [SyntaxKind.NamedTupleMember]: (node: NamedTupleMember): MimicType => parseType(node.type),
+    [SyntaxKind.TupleType]: (node: TupleTypeNode): MimicTuple => ({
+        kind: MimicTypeKind.Tuple,
+        elements: node.elements.map(element => parseType(element)),
+    }),
 };
 
 export const parseType = (node: Node): MimicType => {

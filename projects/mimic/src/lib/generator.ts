@@ -57,6 +57,9 @@ const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGe
                 }
                 return value;
             };
+        case MimicTypeKind.Tuple:
+            const tupleGenerators = type.elements.map(element => createTypeGenerator(element, generators));
+            return () => tupleGenerators.map(elementGenerator => elementGenerator());
     }
 };
 

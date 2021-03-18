@@ -9,14 +9,15 @@ export type MimicGeneratorOutput =
 export type MimicGenerator = () => MimicGeneratorOutput;
 
 export const enum MimicTypeKind {
-    DefinitionReference,
-    Primary,
-    Array,
-    Literal,
-    Union,
-    TemplateLiteral,
-    Object,
-    Optional,
+    DefinitionReference = 0,
+    Primary = 1,
+    Array = 2,
+    Literal = 3,
+    Union = 4,
+    TemplateLiteral = 5,
+    Object = 6,
+    Optional = 7,
+    Tuple = 8,
 }
 
 export interface MimicTypeBase {
@@ -91,6 +92,11 @@ export interface MimicObject extends MimicTypeBase {
     properties: MimicObjectProperty[];
 }
 
+export interface MimicTuple extends MimicTypeBase {
+    kind: MimicTypeKind.Tuple;
+    elements: MimicType[];
+}
+
 export type MimicType =
     MimicDefintionReference
     | MimicPrimary
@@ -99,7 +105,8 @@ export type MimicType =
     | MimicUnion
     | MimicTemplateLiteral
     | MimicObject
-    | MimicOptional;
+    | MimicOptional
+    | MimicTuple;
 
 export const enum MimicDefinitionKind {
     Interface,
