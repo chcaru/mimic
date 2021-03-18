@@ -28,6 +28,8 @@ import { IconsProviderModule } from './icons-provider.module';
 import { MimicDefinerComponent } from './components/mimic-definer/mimic-definer.component';
 import { NewEventHubComponent } from './pages/new-event-hub/new-event-hub.component';
 import { reducers, metaReducers } from './store';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 registerLocaleData(en);
 
@@ -59,6 +61,7 @@ registerLocaleData(en);
         NzSliderModule,
         LineChartModule,
         StoreRouterConnectingModule.forRoot(),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ],
     providers: [{ provide: NZ_I18N, useValue: en_US }],
     bootstrap: [AppComponent],

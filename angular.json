@@ -211,7 +211,8 @@
                   "glob": "**/*",
                   "input": "node_modules/monaco-editor/min/vs",
                   "output": "/assets/vs/"
-                }
+                },
+              "projects/eventhub/src/manifest.webmanifest"
             ],
             "styles": [
               "projects/eventhub/src/theme.less",
@@ -245,7 +246,9 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "projects/eventhub/ngsw-config.json"
             }
           }
         },
@@ -285,7 +288,8 @@
                 "glob": "**/*",
                 "input": "node_modules/monaco-editor/min/vs",
                 "output": "/assets/vs/"
-              }
+              },
+              "projects/eventhub/src/manifest.webmanifest"
             ],
             "styles": [
               "projects/eventhub/src/styles.scss"

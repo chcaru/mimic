@@ -62,6 +62,9 @@ type Team = {
 
 // Use type aliases to represent top level array types
 type People = Person[]; // Arrays have a random range of 0 to 10 elements
+
+// Use tuples to represent more precise arrays
+type Couple = [Person, Person];
 `;
 
     public readonly editorOptions: EditorOptions = {
