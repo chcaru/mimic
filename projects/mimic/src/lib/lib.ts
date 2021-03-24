@@ -192,6 +192,8 @@ export type asVehicleFuel = string;
 export type asVehicleVIN = string;
 export type asVehicleColor = string;
 
+export type asJSON<T, TSpace extends number = 0> = string;
+
 // Modifications to the above need to be copied to this string. `export` needs to be removed from the string
 // The above types are mostly just for validation and somestimes use if needed
 export const lib = `
@@ -388,5 +390,7 @@ type asVehicleType = string;
 type asVehicleFuel = string;
 type asVehicleVIN = string;
 type asVehicleColor = string;
+
+type asJSON<T, TSpace extends number = 0> = string;
 
 `;

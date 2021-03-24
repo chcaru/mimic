@@ -4,7 +4,7 @@ import {
     MimicPrimaryArgs,
 } from './contracts';
 
-type FakerMappings = {
+type PrimaryMappings = {
     [T in MimicPrimaryKind]?: (...args: MimicPrimaryArgs) => any;
 };
 
@@ -19,7 +19,7 @@ const abbrContext = (fn: Function) => (abbr?: boolean, context?: boolean) => fn(
     context,
 });
 
-const fakerMappings: FakerMappings = {
+const primaryMappings: PrimaryMappings = {
     [MimicPrimaryKind.asZipCodeByState]: faker.address.zipCodeByState,
     [MimicPrimaryKind.asZipCode]: faker.address.zipCode,
     [MimicPrimaryKind.asCity]: faker.address.city,
@@ -187,8 +187,8 @@ const fakerMappings: FakerMappings = {
 };
 
 export const generatePrimary = (primary: MimicPrimaryKind, args: MimicPrimaryArgs) => {
-    const fakerMapping = fakerMappings[primary];
-    return fakerMapping
-        ? fakerMapping(...args)
+    const primaryMapping = primaryMappings[primary];
+    return primaryMapping
+        ? primaryMapping(...args)
         : undefined;
 };

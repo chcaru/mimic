@@ -60,6 +60,9 @@ const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGe
         case MimicTypeKind.Tuple:
             const tupleGenerators = type.elements.map(element => createTypeGenerator(element, generators));
             return () => tupleGenerators.map(elementGenerator => elementGenerator());
+        case MimicTypeKind.JSON:
+            const jsonTypeGenerator = createTypeGenerator(type.type, generators);
+            return () => JSON.stringify(jsonTypeGenerator(), undefined, type.indent);
     }
 };
 

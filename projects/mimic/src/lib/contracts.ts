@@ -18,6 +18,7 @@ export const enum MimicTypeKind {
     Object = 6,
     Optional = 7,
     Tuple = 8,
+    JSON = 9,
 }
 
 export interface MimicTypeBase {
@@ -97,6 +98,12 @@ export interface MimicTuple extends MimicTypeBase {
     elements: MimicType[];
 }
 
+export interface MimicJSON extends MimicTypeBase {
+    kind: MimicTypeKind.JSON;
+    type: MimicType;
+    indent: number;
+}
+
 export type MimicType =
     MimicDefintionReference
     | MimicPrimary
@@ -106,7 +113,8 @@ export type MimicType =
     | MimicTemplateLiteral
     | MimicObject
     | MimicOptional
-    | MimicTuple;
+    | MimicTuple
+    | MimicJSON;
 
 export const enum MimicDefinitionKind {
     Interface,
