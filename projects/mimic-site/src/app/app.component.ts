@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { MimicLib, mimic } from 'mimic';
+import { MimicLib, mimicDefinitions, mimicGenerators } from 'mimic';
 import type { EditorOptions, NzCodeEditorComponent } from 'ng-zorro-antd/code-editor';
 import type * as m from 'monaco-editor';
 import { BehaviorSubject } from 'rxjs';
@@ -84,7 +84,12 @@ type Couple = [Person, Person];
     }
 
     public setOutput(definition: string) {
-        const generators = mimic(definition);
+        const definitions = mimicDefinitions(definition);
+        const generators = mimicGenerators(definitions);
+        console.log('Mimic output', {
+            definitions,
+            generators,
+        });
         const outputs = [];
         for (const genDef of generators.generatorDefs) {
             const output = `\nconst ${genDef.name} = `

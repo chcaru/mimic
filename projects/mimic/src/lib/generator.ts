@@ -11,14 +11,18 @@ const getRandom = (min: number, max: number) => min + Math.random() * (max - min
 const getRandomInt = (min: number, max: number) => Math.round(getRandom(min, max));
 const getRandomArray = (min: number, max: number) => new Array(getRandomInt(min, max)).fill(null);
 
-const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGenerator>) => {
+const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGenerator>): MimicGenerator => {
     switch (type.kind) {
         case MimicTypeKind.DefinitionReference:
             return () => generators[type.definition]();
         case MimicTypeKind.Literal:
             return () => type.value;
         case MimicTypeKind.Primary:
-            return () => generatePrimary(type.primary, type.args || []);
+            const primaryArgs = (type.args || []).map(arg => typeof arg === 'object'
+                ? createTypeGenerator(arg.type, generators)
+                : arg,
+            );
+            return () => generatePrimary(type.primary, primaryArgs);
         case MimicTypeKind.Array:
             const arrayElementGenerator = createTypeGenerator(type.element, generators);
             return () => getRandomArray(type.min, type.max).map(arrayElementGenerator);
@@ -60,9 +64,6 @@ const createTypeGenerator = (type: MimicType, generators: Record<string, MimicGe
         case MimicTypeKind.Tuple:
             const tupleGenerators = type.elements.map(element => createTypeGenerator(element, generators));
             return () => tupleGenerators.map(elementGenerator => elementGenerator());
-        case MimicTypeKind.JSON:
-            const jsonTypeGenerator = createTypeGenerator(type.type, generators);
-            return () => JSON.stringify(jsonTypeGenerator(), undefined, type.indent);
     }
 };
 

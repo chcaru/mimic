@@ -33,7 +33,7 @@ import {
     MimicObject,
     MimicOptional,
     MimicTuple,
-    MimicJSON,
+    MimicPrimaryRuntimeArgKind,
 } from './contracts';
 import {
     findNearestParentOfKind,
@@ -236,10 +236,16 @@ const mimicPrimaryParsers = {
     asVehicleFuel: simpleParser(MimicPrimaryKind.asVehicleFuel),
     asVehicleVIN: simpleParser(MimicPrimaryKind.asVehicleVIN),
     asVehicleColor: simpleParser(MimicPrimaryKind.asVehicleColor),
-    asJSON: (ref: TypeReferenceNode): MimicJSON => ({
-        kind: MimicTypeKind.JSON,
-        type: parseType(ref.typeArguments[0] as TypeReferenceNode),
-        indent: getLiteralNumber(ref.typeArguments[1]),
+    asJSON: (ref: TypeReferenceNode): MimicPrimary => ({
+        kind: MimicTypeKind.Primary,
+        primary: MimicPrimaryKind.asJSON,
+        args: [
+            {
+                kind: MimicPrimaryRuntimeArgKind.Generator,
+                type: parseType(ref.typeArguments[0] as TypeReferenceNode),
+            },
+            getLiteralNumber(ref.typeArguments[1]),
+        ],
     }),
 };
 

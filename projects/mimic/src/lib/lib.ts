@@ -23,7 +23,7 @@ export type asLongitude<Max extends number = number, Min extends number = number
 export type asDirection = string;
 export type asCardinalDirection = string;
 export type asOrdinalDirection = string;
-export type asNearbyGPSCoordinate = string;
+export type asNearbyGPSCoordinate = string[];
 export type asTimeZone = string;
 
 export type asCommerceColor = string;
@@ -192,7 +192,7 @@ export type asVehicleFuel = string;
 export type asVehicleVIN = string;
 export type asVehicleColor = string;
 
-export type asJSON<T, TSpace extends number = 0> = string;
+export type asJSON<T, TIndent extends number = undefined> = string;
 
 // Modifications to the above need to be copied to this string. `export` needs to be removed from the string
 // The above types are mostly just for validation and somestimes use if needed
@@ -222,7 +222,7 @@ type asLongitude<Max extends number = number, Min extends number = number> = str
 type asDirection = string;
 type asCardinalDirection = string;
 type asOrdinalDirection = string;
-type asNearbyGPSCoordinate = string;
+type asNearbyGPSCoordinate = string[];
 type asTimeZone = string;
 
 type asCommerceColor = string;
@@ -391,6 +391,6 @@ type asVehicleFuel = string;
 type asVehicleVIN = string;
 type asVehicleColor = string;
 
-type asJSON<T, TSpace extends number = 0> = string;
+type asJSON<T, TIndent extends number = undefined> = string;
 
 `;

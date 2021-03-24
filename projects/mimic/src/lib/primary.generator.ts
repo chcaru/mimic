@@ -1,11 +1,20 @@
 import * as faker from 'faker';
 import {
+    MimicGenerator,
     MimicPrimaryKind,
-    MimicPrimaryArgs,
+    MimicPrimaryArg,
 } from './contracts';
 
+export type MimicPrimaryResolvedArg =
+    Exclude<MimicPrimaryArg, object>
+    | MimicGenerator
+    | Date
+    | RegExp
+    | MimicPrimaryResolvedArg[]
+    | readonly MimicPrimaryResolvedArg[];
+
 type PrimaryMappings = {
-    [T in MimicPrimaryKind]?: (...args: MimicPrimaryArgs) => any;
+    [T in MimicPrimaryKind]?: (...args: MimicPrimaryResolvedArg[]) => any;
 };
 
 const minMaxRange = (fn: Function) => (min?: number, max?: number, precision?: number) => fn({
@@ -184,9 +193,10 @@ const primaryMappings: PrimaryMappings = {
     [MimicPrimaryKind.asVehicleFuel]: faker.vehicle.fuel,
     [MimicPrimaryKind.asVehicleVIN]: faker.vehicle.vin,
     [MimicPrimaryKind.asVehicleColor]: faker.vehicle.color,
+    [MimicPrimaryKind.asJSON]: (generator: MimicGenerator, indent: number) => JSON.stringify(generator(), undefined, indent),
 };
 
-export const generatePrimary = (primary: MimicPrimaryKind, args: MimicPrimaryArgs) => {
+export const generatePrimary = (primary: MimicPrimaryKind, args: MimicPrimaryResolvedArg[]) => {
     const primaryMapping = primaryMappings[primary];
     return primaryMapping
         ? primaryMapping(...args)

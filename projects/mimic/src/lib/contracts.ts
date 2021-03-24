@@ -2,6 +2,7 @@
 export type MimicGeneratorOutput =
     number
     | string
+    | boolean
     | undefined
     | null
     | { [key: string]: MimicGeneratorOutput }
@@ -18,7 +19,6 @@ export const enum MimicTypeKind {
     Object = 6,
     Optional = 7,
     Tuple = 8,
-    JSON = 9,
 }
 
 export interface MimicTypeBase {
@@ -30,7 +30,24 @@ export interface MimicDefintionReference extends MimicTypeBase {
     definition: string;
 }
 
-export type MimicPrimaryArgs = unknown[];
+export const enum MimicPrimaryRuntimeArgKind {
+    Generator = 0,
+}
+
+export interface MimicPrimaryGeneratorArg {
+    kind: MimicPrimaryRuntimeArgKind.Generator;
+    type: MimicType;
+}
+
+export type MimicPrimaryArg =
+    number
+    | string
+    | boolean
+    | undefined
+    | null
+    | MimicPrimaryGeneratorArg;
+
+export type MimicPrimaryArgs = MimicPrimaryArg[];
 
 export interface MimicPrimary<T extends MimicPrimaryKind = MimicPrimaryKind> extends MimicTypeBase {
     kind: MimicTypeKind.Primary;
@@ -47,7 +64,7 @@ export interface MimicArray extends MimicTypeBase {
 
 export interface MimicLiteral extends MimicTypeBase {
     kind: MimicTypeKind.Literal;
-    value: string | number | boolean;
+    value: string | number | boolean | undefined | null;
 }
 
 export interface MimicUnion extends MimicTypeBase {
@@ -98,12 +115,6 @@ export interface MimicTuple extends MimicTypeBase {
     elements: MimicType[];
 }
 
-export interface MimicJSON extends MimicTypeBase {
-    kind: MimicTypeKind.JSON;
-    type: MimicType;
-    indent: number;
-}
-
 export type MimicType =
     MimicDefintionReference
     | MimicPrimary
@@ -113,8 +124,7 @@ export type MimicType =
     | MimicTemplateLiteral
     | MimicObject
     | MimicOptional
-    | MimicTuple
-    | MimicJSON;
+    | MimicTuple;
 
 export const enum MimicDefinitionKind {
     Interface,
@@ -300,4 +310,5 @@ export const enum MimicPrimaryKind {
     asVehicleFuel,
     asVehicleVIN,
     asVehicleColor,
+    asJSON,
 }
