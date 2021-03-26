@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { defer, EMPTY, from, interval, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { catchError, map, repeat, shareReplay, switchMap, take } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
+import { defer, EMPTY, from, interval, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { catchError, map, repeat, switchMap, take } from 'rxjs/operators';
 import { mimicGenerators } from 'mimic';
 import { EventHubProducerClient } from '@azure/event-hubs';
 
@@ -53,8 +52,8 @@ export class EventHubService {
             return;
         }
 
-        const { generatorMap } = mimicGenerators(eventHub.mimicDefinitions || []);
-        const generator = generatorMap[eventHub.generatorName];
+        const generators = mimicGenerators(eventHub.mimicDefinitions || []);
+        const generator = generators.map[eventHub.generatorName];
 
         if (!generator) {
             return;

@@ -90,13 +90,9 @@ type Couple = [Person, Person];
             definitions,
             generators,
         });
-        const outputs = [];
-        for (const genDef of generators.generatorDefs) {
-            const output = `\nconst ${genDef.name} = `
-                + JSON.stringify(genDef.generator(), null, 4) + ';';
-            outputs.push(output);
-        }
-        const output = outputs.join('\n');
+        const output = generators.definitions
+            .map(definition => `\nconst ${definition.name} = ${JSON.stringify(definition.generator(), null, 4)};`)
+            .join('\n');
         this.output$.next(output);
         this.outputEditor.writeValue(output);
     }

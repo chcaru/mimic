@@ -6,8 +6,6 @@
   },
   "whitelistedNonPeerDependencies": [
     "faker",
-    "seedrandom",
-    "string-similarity",
-    "typescript"
+    "string-similarity"
   ]
 }

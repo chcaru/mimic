@@ -1,5 +1,5 @@
 {
-  "name": "chriscaruso",
+  "name": "mimic",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy:mimic-site": "ng build mimic-site --prod && firebase deploy --only hosting:mimic-site",
-    "deploy:eventhub": "ng build eventhub --prod && firebase deploy --only hosting:eventhub"
+    "deploy:eventhub": "ng build eventhub --prod && firebase deploy --only hosting:eventhub",
+    "publish:ts-mimic": "ng build mimic --prod && cd dist/mimic && npm publish"
   },
   "private": true,
   "dependencies": {

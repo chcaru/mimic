@@ -1,10 +1,10 @@
-import { MimicDefinition } from './contracts';
+import { MimicDefinition, MimicGeneratorResult } from './contracts';
 import { getDefinitions } from './definition';
 import { createDefinitionGenerator } from './generator';
 
 export const mimicDefinitions = (code: string) => getDefinitions(code);
 
-export const mimicGenerators = (definitions: MimicDefinition[]) => {
+export const mimicGenerators = (definitions: MimicDefinition[]): MimicGeneratorResult => {
 
     const definitionMap = {};
     for (const definition of definitions) {
@@ -12,16 +12,16 @@ export const mimicGenerators = (definitions: MimicDefinition[]) => {
     }
 
     const generatorMap = {};
-    const generatorDefs = definitions.map(
+    const generatorDefinitions = definitions.map(
         definition => createDefinitionGenerator(definition.name, definitionMap, generatorMap),
     );
-    for (const generatorDef of generatorDefs) {
+    for (const generatorDef of generatorDefinitions) {
         generatorMap[generatorDef.name] = generatorDef.generator;
     }
 
     return {
-        generatorMap,
-        generatorDefs,
+        definitions: generatorDefinitions,
+        map: generatorMap,
     };
 };
 

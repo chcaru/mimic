@@ -14,6 +14,7 @@ import { getPropertyName } from './helper.parsers';
 import { lib } from './lib';
 import { parseDefinition } from './definition.parser';
 import { isBuiltInType } from './type.parser';
+import { MimicDefinition } from './contracts';
 
 const definitionFileName = 'defintion.ts';
 
@@ -43,7 +44,7 @@ const topLevelDefinition = new Set([
     SyntaxKind.TypeAliasDeclaration,
 ]);
 
-export const getDefinitions = (tsCodeDefinition: string) => {
+export const getDefinitions = (tsCodeDefinition: string): MimicDefinition[] => {
     const config: CompilerOptions = {
         noResolve: true,
         target: ScriptTarget.ES5,

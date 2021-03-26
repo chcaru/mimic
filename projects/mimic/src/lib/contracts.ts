@@ -7,7 +7,22 @@ export type MimicGeneratorOutput =
     | null
     | { [key: string]: MimicGeneratorOutput }
     | MimicGeneratorOutput[];
+
 export type MimicGenerator = () => MimicGeneratorOutput;
+
+export interface MimicGeneratorMap {
+    [generatorName: string]: MimicGenerator;
+}
+
+export interface MimicGeneratorDefinition {
+    name: string;
+    generator: MimicGenerator;
+}
+
+export interface MimicGeneratorResult {
+    definitions: MimicGeneratorDefinition[];
+    map: MimicGeneratorMap;
+}
 
 export const enum MimicTypeKind {
     DefinitionReference = 0,
